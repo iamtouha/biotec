@@ -1,1 +1,1 @@
-# biotec
+# biotech
