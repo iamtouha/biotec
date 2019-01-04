@@ -1,6 +1,12 @@
 <template>
   <div>
     <div class="container mb-5">
+      <modal
+        title="DELETE PRODUCT"
+        text="Do you want to continue?"
+        @confirm="dltProduct"
+        confirmation="confirm"
+      />
       <div class="row justify-content-center">
         <h3>{{name}}</h3>
       </div>
@@ -24,11 +30,11 @@
             class="list-group-item row justify-content-between text-center"
           >
             <div class="row">
-              <div class="col-5 text-center">
+              <div class="col-6 text-center text-truncate">
                 <b>{{key}}</b>
               </div>
-              <div class="col-2 text-center">:</div>
-              <div class="col-5 text-center">{{value}}tk</div>
+              <div class="col-1 text-center">:</div>
+              <div class="col-4 text-center">{{value}}tk</div>
             </div>
           </li>
         </ul>
@@ -37,16 +43,27 @@
     <router-link
       :to="'/product/'+this.$route.params.id+'/edit'"
       tag="button"
-      class="btn btn-info w-100 position-fixed text-center text-white"
+      class="btn btn-info text-center text-white"
     >Edit</router-link>
+    <button
+      data-toggle="modal"
+      data-target="#exampleModal"
+      @click.prevent
+      class="btn btn-danger"
+    >Delete</button>
   </div>
 </template>
 <script>
 import { mapGetters } from "vuex";
 import db from "./../components/firebaseInit.js";
+import modal from "./../components/Modal.vue";
 export default {
+  components: {
+    modal
+  },
   data() {
     return {
+      id: null,
       name: "",
       packs: {},
       type: "",
@@ -54,19 +71,34 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["productsInfo"])
+    ...mapGetters(["productsInfo"]),
+    Pid() {
+      return this.$route.params.id;
+    }
+  },
+  methods: {
+    dltProduct() {
+      db.collection("products")
+        .doc(this.Pid)
+        .delete()
+        .then(() => {
+          this.$router.push("/");
+        })
+        .catch(err => alert(err));
+    }
   },
   created() {
-    let id = this.$route.params.id;
+    let id = this.Pid;
     db.collection("products")
       .doc(id)
       .get()
       .then(doc => {
-        doc.data();
         this.name = doc.data().name;
         this.packs = doc.data().pack;
         this.type = doc.data().type;
-        this.image = doc.data().imageUrl;
+        this.image = doc.data().imageUrl
+          ? doc.data().imageUrl
+          : require("./../assets/img/" + doc.data().type + ".svg");
       });
   }
 };
@@ -84,8 +116,15 @@ div.container {
 }
 button {
   height: 50px;
-  left: 0;
   bottom: 0;
-  background: #01796f;
+  width: 50%;
+  position: fixed;
+}
+button.btn-info {
+  left: 0;
+  background: #01796f !important;
+}
+button.btn-danger {
+  right: 0;
 }
 </style>

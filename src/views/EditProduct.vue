@@ -125,7 +125,7 @@ export default {
       type: "packet",
       pack: {},
       size: null,
-      price: null,
+      price: 0,
       warning: null,
       ckey: 0,
       packages: 0,
@@ -136,7 +136,7 @@ export default {
     addToPack(size, price) {
       if (size && price) {
         if (!this.pack[size]) {
-          this.pack[size] = price;
+          this.pack[size] = Number(price);
           this.price = this.size = this.warning = null;
           console.log(this.pack);
           this.ckey++;

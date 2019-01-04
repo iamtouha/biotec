@@ -54,6 +54,22 @@
                   class="btn btn-info my-2 mx-auto"
                 >Add</button>
               </div>
+              <ul class="list-group mb-3 px-0">
+                <li
+                  class="list-group-item d-flex px-0"
+                  :key="clients[element]"
+                  v-for="(element, index) in clients"
+                >
+                  <span class="col-1 text-left">{{index+1}}</span>
+                  <span class="col-5 text-truncate text-left">{{element.name}}</span>
+                  <span class="col-3 text-truncate">{{element.area}}</span>
+                  <span
+                    class="col-2 btn btn-outline-danger btn-sm py-0"
+                    style="font-size:14px;"
+                    @click="deleteClient(element.id, index)"
+                  >&times;</span>
+                </li>
+              </ul>
             </form>
           </div>
         </div>
@@ -115,7 +131,8 @@ export default {
       currentUser: false,
       clientName: null,
       clientArea: null,
-      warning: null
+      warning: null,
+      clients: []
     };
   },
   computed: {
@@ -155,6 +172,7 @@ export default {
                   this.warning = "";
                   this.clientName = null;
                   this.clientArea = null;
+                  this.updateClients();
                 })
                 .catch(err => alert(err));
             }
@@ -162,7 +180,47 @@ export default {
       } else {
         this.warning = "Insert Name and Area";
       }
+    },
+    deleteClient(id, index) {
+      db.collection(this.clientType)
+        .doc(id)
+        .delete()
+        .then(() => {
+          this.clients.splice(index, 1);
+        })
+        .catch(err => alert(err));
+    },
+    updateClients() {
+      this.clients = [];
+      db.collection(this.clientType)
+        .where("ref", "==", this.userInfo.id)
+        .get()
+        .then(querySnapshot => {
+          querySnapshot.forEach(doc => {
+            this.clients.push({
+              name: doc.data().name,
+              area: doc.data().area,
+              id: doc.id
+            });
+          });
+        })
+        .catch(err => alert(err));
     }
+  },
+  created() {
+    db.collection(this.clientType)
+      .where("ref", "==", this.userInfo.id)
+      .get()
+      .then(querySnapshot => {
+        querySnapshot.forEach(doc => {
+          this.clients.push({
+            name: doc.data().name,
+            area: doc.data().area,
+            id: doc.id
+          });
+        });
+      })
+      .catch(err => alert(err));
   }
 };
 </script>

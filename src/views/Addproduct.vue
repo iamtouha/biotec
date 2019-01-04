@@ -122,7 +122,7 @@ export default {
         pack: {}
       },
       size: null,
-      price: null,
+      price: 0,
       warning: null,
       ckey: 0,
       packages: 0,
@@ -133,7 +133,7 @@ export default {
     addToPacks(size, price) {
       if (size && price) {
         if (!this.product.pack[size]) {
-          this.product.pack[size] = price;
+          this.product.pack[size] = Number(price);
           this.price = this.size = this.warning = null;
           console.log(this.product.pack);
           this.ckey++;
