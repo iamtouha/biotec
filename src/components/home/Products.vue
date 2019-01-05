@@ -10,6 +10,7 @@
         <p class="text-truncate mb-0">{{product.name}}</p>
       </router-link>
     </div>
+    <Loading v-if="loading"/>
   </div>
 </template>
 
@@ -17,7 +18,7 @@
 import { mapGetters } from "vuex";
 export default {
   computed: {
-    ...mapGetters(["productsInfo"])
+    ...mapGetters(["productsInfo", "loading"])
   }
 };
 </script>

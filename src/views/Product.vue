@@ -82,7 +82,7 @@ export default {
         .doc(this.Pid)
         .delete()
         .then(() => {
-          this.$router.push("/");
+          this.$store.dispatch("getUserInfo", "/");
         })
         .catch(err => alert(err));
     }

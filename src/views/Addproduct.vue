@@ -107,15 +107,18 @@
 import firebase from "firebase";
 import Loading from "./../components/Loader.vue";
 import db from "./../components/firebaseInit.js";
+import { mapGetters, mapActions } from "vuex";
 export default {
   components: {
     Loading
+  },
+  computed: {
+    ...mapGetters(["loading"])
   },
   data() {
     return {
       imgFileName: "product Image",
       imgFile: null,
-      loading: false,
       name: null,
       product: {
         type: "packet",
@@ -130,6 +133,7 @@ export default {
     };
   },
   methods: {
+    ...mapActions(["loadOn", "loadOff", "getUserInfo"]),
     addToPacks(size, price) {
       if (size && price) {
         if (!this.product.pack[size]) {
@@ -159,6 +163,7 @@ export default {
     },
 
     submitProduct() {
+      this.loadOn;
       db.collection("products")
         .doc()
         .set({
@@ -187,22 +192,18 @@ export default {
                         .doc(pId)
                         .update({ imageUrl: downloadURL })
                         .then(() => {
-                          this.$store.dispatch("getUserInfo");
-                          this.loading = false;
-                          this.$router.push("/");
+                          this.getUserInfo("/");
                         });
                     });
                   });
               });
           } else {
-            this.loading = false;
-            this.$store.dispatch("getUserInfo");
-            this.$router.push("/");
+            this.getUserInfo("/");
           }
         });
     },
     validateAndSubmit() {
-      this.loading = true;
+      this.loadOn;
       db.collection("products")
         .where("name", "==", this.name)
         .where("ULed_by", "==", this.$store.getters.userInfo.id)
@@ -210,12 +211,15 @@ export default {
         .then(querySnapshot => {
           if (querySnapshot.size) {
             this.warning = "product already exists";
-            this.loading = false;
+            this.loadOff;
           } else {
             this.submitProduct();
           }
         });
     }
+  },
+  created() {
+    this.loadOff;
   }
 };
 </script>

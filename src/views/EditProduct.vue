@@ -108,19 +108,18 @@
 import firebase from "firebase";
 import Loading from "./../components/Loader.vue";
 import db from "./../components/firebaseInit.js";
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 export default {
   components: {
     Loading
   },
   computed: {
-    ...mapGetters(["productsInfo", "userInfo"])
+    ...mapGetters(["productsInfo", "userInfo", "loading"])
   },
   data() {
     return {
       imgFileName: "product Image",
       imgFile: null,
-      loading: false,
       name: null,
       type: "packet",
       pack: {},
@@ -133,6 +132,7 @@ export default {
     };
   },
   methods: {
+    ...mapActions(["loadOn", "loadOff", "getUserInfo"]),
     addToPack(size, price) {
       if (size && price) {
         if (!this.pack[size]) {
@@ -160,7 +160,7 @@ export default {
     },
 
     submitEdit() {
-      this.loading = true;
+      this.loadOn;
       db.collection("products")
         .doc(this.$route.params.edtId)
         .update({
@@ -182,16 +182,12 @@ export default {
                     .doc(this.$route.params.edtId)
                     .update({ imageUrl: downloadURL })
                     .then(() => {
-                      this.$store.dispatch("getUserInfo");
-                      this.loading = false;
-                      this.$router.push("/");
+                      this.getUserInfo("/");
                     });
                 });
               });
           } else {
-            this.loading = false;
-            this.$store.dispatch("getUserInfo");
-            this.$router.push("/");
+            this.getUserInfo("/");
           }
         });
     }

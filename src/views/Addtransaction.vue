@@ -79,20 +79,23 @@
         class="btn w-100 position-fixed text-center text-white"
       >
     </form>
+    <Loading v-if="loading"/>
   </div>
 </template>
 
 <script>
 import VueSingleSelect from "vue-single-select";
-import { mapGetters } from "vuex";
+import Loading from "./../components/Loader.vue";
+import { mapGetters, mapActions } from "vuex";
 import db from "./../components/firebaseInit.js";
 import firebase from "firebase";
 export default {
   components: {
-    VueSingleSelect
+    VueSingleSelect,
+    Loading
   },
   computed: {
-    ...mapGetters(["userInfo", "productsInfo"]),
+    ...mapGetters(["userInfo", "productsInfo", "loading"]),
     clientType() {
       return this.userInfo.post == "Area Manager" ? "Dealer" : "Retailer";
     }
@@ -115,6 +118,7 @@ export default {
     };
   },
   methods: {
+    ...mapActions(["loadOn", "loadOff"]),
     addProduct(product, size, unit, perUnitPrice) {
       if (size && unit && perUnitPrice) {
         this.selectedProduct.push({
@@ -134,6 +138,7 @@ export default {
       this.selectedProduct.splice(i, 1);
     },
     submitProduct() {
+      this.loadOn;
       db.collection("transactions")
         .doc()
         .set({
@@ -145,10 +150,11 @@ export default {
           time: firebase.firestore.FieldValue.serverTimestamp()
         })
         .then(() => {
+          this.loadOff;
           this.$router.push("/transactions");
-          console.log("done transaction");
         })
         .catch(err => alert(err));
+      this.loadOff;
     }
   },
   watch: {
@@ -186,7 +192,6 @@ export default {
         }
       })
       .catch(err => alert(err));
-    console.log(this.clients);
 
     this.productsInfo.forEach(product => {
       this.products.push({
@@ -194,6 +199,7 @@ export default {
         title: product.name
       });
     });
+    this.loadOff;
   }
 };
 </script>

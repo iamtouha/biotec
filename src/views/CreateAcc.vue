@@ -72,6 +72,7 @@
 import db from "@/components/firebaseInit.js";
 import Loading from "./../components/Loader.vue";
 import firebase from "firebase";
+import { mapGetters, mapActions } from "vuex";
 export default {
   components: {
     Loading
@@ -88,7 +89,11 @@ export default {
       warning: null
     };
   },
+  computed: {
+    ...mapGetters(["loading"])
+  },
   methods: {
+    ...mapActions(["loadOn", "loadOff", "getUserInfo", "getEmail"]),
     submitInfo(e) {
       e.preventDefault();
       if (
@@ -99,7 +104,7 @@ export default {
         this.post &&
         this.mail
       ) {
-        this.loading = true;
+        this.loadOn;
         const fullName = this.firstName + " " + this.lastName;
         db.collection("user")
           .doc()
@@ -111,13 +116,11 @@ export default {
             post: this.post
           })
           .then(() => {
-            this.$store.dispatch("getEmail", this.mail);
-            this.$store.dispatch("getUserInfo");
-            this.loading = false;
-            this.$router.push("/addphoto");
+            this.getEmail(this.mail);
+            this.getUserInfo("/addphoto");
           })
           .catch(error => {
-            this.loading = false;
+            this.loadOff;
             console.error("Error writing document: ", error);
           });
       } else {
@@ -141,6 +144,7 @@ export default {
   created() {
     this.mail = firebase.auth().currentUser.email;
     this.validMail(this.mail);
+    this.loadOff;
   }
 };
 </script>

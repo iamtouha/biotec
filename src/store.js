@@ -1,12 +1,13 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import router from './router'
+
 import db from '@/components/firebaseInit.js'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    currentpage: 'home',
     user: {
       id: null,
       email: null,
@@ -15,10 +16,14 @@ export default new Vuex.Store({
       imgUrl: null,
       temp: null
     },
+    loader: false,
     products: [],
     company: 'Biotech Agrovet Ltd.'
   },
   getters: {
+    loading: state => {
+      return state.loader
+    },
     productsInfo: state => {
       return state.products;
     },
@@ -30,10 +35,17 @@ export default new Vuex.Store({
     }
   },
   mutations: {
+    setLoaderOn: state => {
+      state.loader = true
+    },
+    setLoaderOff: state => {
+      state.loader = false
+    },
     setEmail: (state, payload) => {
       state.user.email = payload
     },
-    setUserInfo: state => {
+    setUserInfo: (state, payload) => {
+      state.loader = true
       db.collection('user').where('email', '==', state.user.email).get().then((querySnapShot) => {
         querySnapShot.forEach(doc => {
           state.user.id = doc.id;
@@ -55,9 +67,16 @@ export default new Vuex.Store({
                 pack: doc.data().pack,
                 imgUrl: img
               });
+              state.loader = false
+              if (payload)
+                router.push(payload);
+
             });
           })
-          .catch(err => alert(err));
+          .catch(err => {
+            alert(err)
+            state.loader = false
+          });
       })
     }
   },
@@ -65,9 +84,15 @@ export default new Vuex.Store({
     getEmail: (context, payload) => {
       context.commit('setEmail', payload)
     },
-    getUserInfo: context => {
-      context.commit('setUserInfo');
+    getUserInfo: (context, payload) => {
+      context.commit('setUserInfo', payload);
 
+    },
+    loadOn: context => {
+      context.commit('setLoaderOn')
+    },
+    loadOff: context => {
+      context.commit('setLoaderOff')
     }
   }
 })

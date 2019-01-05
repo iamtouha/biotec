@@ -26,21 +26,20 @@
         </div>
       </div>
     </div>
-    <Loader v-if="loader"/>
+    <Loader v-if="loading"/>
   </form>
 </template>
 <script>
 import db from "./../components/firebaseInit.js";
 import Loader from "./../components/Loader.vue";
 import firebase from "firebase";
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 export default {
   components: {
     Loader
   },
   data() {
     return {
-      loader: false,
       selectedFile: null,
       imgUrl: require("./../assets/user-default.svg"),
       fileName: null,
@@ -50,9 +49,10 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["userInfo", "currentPage"])
+    ...mapGetters(["userInfo", "loading"])
   },
   methods: {
+    ...mapActions(["loadOn", "loadOff", "getUserInfo"]),
     imgPreview(e) {
       e.preventDefault();
       this.$refs.imgInput.click();
@@ -75,8 +75,8 @@ export default {
     },
     submitPhoto(e) {
       e.preventDefault();
+      this.loadOn;
       if (this.file) {
-        this.loader = true;
         firebase
           .storage()
           .ref("user-profile/" + this.userInfo.id + ".jpg")
@@ -89,14 +89,18 @@ export default {
                   .doc(this.userInfo.id)
                   .update({ imageUrl: downloadURL })
                   .then(() => {
-                    this.$store.dispatch("getUserInfo");
-                    this.loader = false;
-                    this.$router.push("/");
+                    this.getUserInfo("/");
                   });
               })
-              .catch(err => alert(err));
+              .catch(err => {
+                alert(err);
+                this.loadOff;
+              });
           })
-          .catch(err => alert(err));
+          .catch(err => {
+            alert(err);
+            this.loadOff;
+          });
       } else {
         this.$router.push("/");
       }
@@ -104,6 +108,7 @@ export default {
   },
   created() {
     this.email = firebase.auth().currentUser.email;
+    this.loadOff;
   }
 };
 </script>
