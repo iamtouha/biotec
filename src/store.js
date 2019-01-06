@@ -16,6 +16,7 @@ export default new Vuex.Store({
       imgUrl: null,
       temp: null
     },
+    client: null,
     loader: false,
     products: [],
     company: 'Biotech Agrovet Ltd.'
@@ -32,6 +33,9 @@ export default new Vuex.Store({
     },
     userInfo: state => {
       return state.user;
+    },
+    clientType: state => {
+      return state.client;
     }
   },
   mutations: {
@@ -41,6 +45,7 @@ export default new Vuex.Store({
     setLoaderOff: state => {
       state.loader = false
     },
+
     setEmail: (state, payload) => {
       state.user.email = payload
     },
@@ -48,10 +53,18 @@ export default new Vuex.Store({
       state.loader = true
       db.collection('user').where('email', '==', state.user.email).get().then((querySnapShot) => {
         querySnapShot.forEach(doc => {
+          const user = doc.data()
           state.user.id = doc.id;
-          state.user.name = doc.data().name;
-          state.user.post = doc.data().post;
-          state.user.imgUrl = doc.data().imageUrl;
+          state.user.name = user.name;
+          state.user.post = user.post;
+          state.user.imgUrl = user.imageUrl;
+          if (user.post == "Area Manager") {
+            state.client = "Dealer";
+          } else if (user.post == "Marketing Officer") {
+            state.client = "Retailer";
+          } else {
+            state.client = "Undefined! something went wrong";
+          }
         });
         db.collection("products")
           .where("ULed_by", "==", state.user.id).orderBy('time', 'desc')

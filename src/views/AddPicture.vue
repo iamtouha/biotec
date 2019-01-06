@@ -75,7 +75,7 @@ export default {
     },
     submitPhoto(e) {
       e.preventDefault();
-      this.loadOn;
+      this.loadOn();
       if (this.file) {
         firebase
           .storage()
@@ -94,12 +94,12 @@ export default {
               })
               .catch(err => {
                 alert(err);
-                this.loadOff;
+                this.loadOff();
               });
           })
           .catch(err => {
             alert(err);
-            this.loadOff;
+            this.loadOff();
           });
       } else {
         this.$router.push("/");
@@ -108,7 +108,7 @@ export default {
   },
   created() {
     this.email = firebase.auth().currentUser.email;
-    this.loadOff;
+    this.loadOff();
   }
 };
 </script>

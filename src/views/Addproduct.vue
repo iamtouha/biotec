@@ -9,7 +9,7 @@
             class="form-control"
             v-model="name"
             id="inputName"
-            placeholder="Name (Ex: Biotech)"
+            placeholder="Product Name"
             maxlength="32"
             required
           >
@@ -56,19 +56,31 @@
           <label class="form-check-label" for="exampleRadios2">Bottle</label>
         </div>
       </div>
-      <h3 class="text-center w-100 my-3">Product pack sizes</h3>
-      <ul class="list-group mb-3" :key="ckey">
-        <li class="list-group-item d-flex" :key="packs[key]" v-for="(value, key, index) in packs()">
-          <span class="col-1">{{index + 1}}.</span>
-          <span class="col-6 text-left">{{key}}</span>
-          <span class="col-4">{{value}}tk</span>
-          <span
-            class="col-1 btn btn-outline-danger btn-sm py-1"
-            style="font-size:16px;"
-            @click="deletePack(key)"
-          >&times;</span>
-        </li>
-      </ul>
+      <table class="table" :key="ckey">
+        <thead class="thead-light" id="myTable">
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">size</th>
+            <th scope="col">price</th>
+            <th scope="col">delete</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr :key="packs[key]" v-for="(value, key, index) in packs()">
+            <th scope="row">{{index + 1}}</th>
+            <td>{{key}}</td>
+            <td>{{value}}tk</td>
+            <td>
+              <span
+                class="btn btn-outline-danger btn-sm"
+                style="font-size:16px;"
+                @click="deletePack(key)"
+              >&times;</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
       <div class="form-row px-2 justify-content-center">
         <div class="form-group col-6">
           <input
@@ -163,7 +175,7 @@ export default {
     },
 
     submitProduct() {
-      this.loadOn;
+      this.loadOn();
       db.collection("products")
         .doc()
         .set({
@@ -211,7 +223,7 @@ export default {
         .then(querySnapshot => {
           if (querySnapshot.size) {
             this.warning = "product already exists";
-            this.loadOff;
+            this.loadOff();
           } else {
             this.submitProduct();
           }
@@ -219,7 +231,7 @@ export default {
     }
   },
   created() {
-    this.loadOff;
+    this.loadOff();
   }
 };
 </script>
@@ -242,6 +254,8 @@ div.container {
 }
 .btn-sm {
   height: 25px;
+  width: 50px;
+  text-align: center;
   padding: 0px !important;
 }
 </style>

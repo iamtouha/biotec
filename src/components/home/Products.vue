@@ -31,12 +31,13 @@ div {
     width: 100%;
     height: 100%;
     border: 1px solid #ccc;
-    padding: 10px;
+    padding: 0px;
     padding-bottom: 0px;
     overflow: hidden;
     border-radius: 5px;
     p {
       text-align: center;
+      font-size: 15px;
       color: $txt;
       width: 100%;
     }

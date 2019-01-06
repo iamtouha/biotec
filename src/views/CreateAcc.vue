@@ -79,7 +79,6 @@ export default {
   },
   data() {
     return {
-      loading: false,
       firstName: null,
       lastName: null,
       area: null,
@@ -104,7 +103,7 @@ export default {
         this.post &&
         this.mail
       ) {
-        this.loadOn;
+        this.loadOn();
         const fullName = this.firstName + " " + this.lastName;
         db.collection("user")
           .doc()
@@ -120,7 +119,7 @@ export default {
             this.getUserInfo("/addphoto");
           })
           .catch(error => {
-            this.loadOff;
+            this.loadOff();
             console.error("Error writing document: ", error);
           });
       } else {
@@ -144,7 +143,7 @@ export default {
   created() {
     this.mail = firebase.auth().currentUser.email;
     this.validMail(this.mail);
-    this.loadOff;
+    this.loadOff();
   }
 };
 </script>

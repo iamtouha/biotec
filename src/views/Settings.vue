@@ -136,10 +136,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["userInfo"]),
-    clientType() {
-      return this.userInfo.post == "Area Manager" ? "Dealer" : "Retailer";
-    }
+    ...mapGetters(["userInfo", "clientType"])
   },
   methods: {
     logOut() {

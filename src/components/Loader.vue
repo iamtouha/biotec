@@ -13,6 +13,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .loader {
+  z-index: 999;
   position: absolute;
   top: 48%;
   left: 48%;

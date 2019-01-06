@@ -1,65 +1,159 @@
 <template>
-    <div class="container mt-4">
-        <table class="table">
-  <thead class="thead-light" id="myTable">
-    <tr>
-      <th scope="col">#</th>
-      <th scope="col">First</th>
-      <th scope="col">Last</th>
-      <th scope="col">Handle</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th scope="row">1</th>
-      <td>Mark</td>
-      <td>Otto</td>
-      <td>@mdo</td>
-    </tr>
-    <tr>
-      <th scope="row">2</th>
-      <td>Jacob</td>
-      <td>Thornton</td>
-      <td>@fat</td>
-    </tr>
-    <tr>
-      <th scope="row">3</th>
-      <td>Larry</td>
-      <td>the Bird</td>
-      <td>@twitter</td>
-    </tr>
-  </tbody>
-</table>
-    </div>
+  <div class="container mt-4">
+    <Modal :confirmation="null" title="List">
+      <table class="table" :key="ckey">
+        <thead class="thead-light" id="myTable">
+          <tr>
+            <th scope="col">Product</th>
+            <th scope="col">pack</th>
+            <th scope="col">price</th>
+            <th scope="col">units</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr :key="element" v-for="element in showMemo">
+            <th scope="row">{{element.name}}</th>
+            <td>{{element.size}}</td>
+            <td>{{element.price}}tk</td>
+            <td>{{element.unit}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </Modal>
+    <table class="table table-1">
+      <thead class="thead-light" id="myTable">
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">{{clientType}}</th>
+          <th scope="col">Date</th>
+          <th scope="col">tk</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          v-for="(element, index) in transactions.slice(from, show)"
+          :key="transactions[index]"
+          @click="showList(element.id)"
+          data-toggle="modal"
+          data-target="#exampleModal2"
+        >
+          <th scope="row">{{from+index+1}}</th>
+          <td @click="showList(element.id)" class="text-truncate">{{element.name}}</td>
+          <td class="text-truncate">{{element.date}}</td>
+          <td>{{element.bill}}</td>
+        </tr>
+      </tbody>
+    </table>
+    <ul class="pagination">
+      <li class="page-item">
+        <a class="page-link">Goto Page:</a>
+      </li>
+      <li v-for="n in pages" :key="n" class="page-item">
+        <a class="page-link" @click="paginate(n)">{{n}}</a>
+      </li>
+    </ul>
+    <Loading v-if="loading"/>
+  </div>
 </template>
 
 <script>
-import fireStore from '@/components/firebaseInit.js'
+import db from "@/components/firebaseInit.js";
+import Loading from "@/components/Loader.vue";
+import Modal from "@/components/Modal2.vue";
+import { mapGetters, mapActions } from "vuex";
 export default {
-    data(){
-      return{
-        status: ''
-      }
-    },
-    created() {
-      this.loadTxt() 
-    },
-    methods: {
-      loadTxt(){
-         fireStore.collection('users').where('id', '==', 1).get()
-        .then(function(querySnapshot){
-          querySnapshot.forEach(doc => {
-            console.log(doc.data());
-            const refData = doc.data();
+  components: { Loading, Modal },
+  data() {
+    return {
+      transactions: [],
+      items: 0,
+      from: 0,
+      show: 5,
+      pages: 0,
+      showMemo: null
+    };
+  },
+  computed: {
+    ...mapGetters(["userInfo", "loading", "clientType"])
+  },
+  methods: {
+    ...mapActions(["loadOn", "loadOff"]),
+    loadClients() {
+      this.loadOn();
+      db.collection("transactions")
+        .where("refId", "==", this.userInfo.id)
+        .orderBy("time", "desc")
+        .get()
+        .then(querySnap => {
+          const monthNames = [
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "May",
+            "June",
+            "July",
+            "Aug",
+            "Sept",
+            "Oct",
+            "Nov",
+            "Dec"
+          ];
+          querySnap.forEach(doc => {
+            const entry = doc.data();
+            const timeToDate = entry.time.toDate();
+            let date = timeToDate.getDate();
+            let month = monthNames[timeToDate.getMonth()];
+            let year = timeToDate.getFullYear();
+
+            this.transactions.push({
+              id: doc.id,
+              name: entry.clientName,
+              date: String(date) + "-" + month + "-" + String(year),
+              products: entry.products,
+              bill: entry.netPrice
+            });
+            this.loadOff();
           });
-        }).catch(function(error) {
-        console.log("Error getting documents: ", error);
+        })
+        .catch(err => {
+          alert(err);
+          this.loadOff();
         });
+    },
+    paginate(n) {
+      this.from = 5 * n - 5;
+      this.show = 5 * n;
+    },
+    showList(id) {
+      for (let i in this.transactions) {
+        if (this.transactions[i].id == id) {
+          this.showMemo = this.transactions[i].products;
+          break;
+        }
       }
+      console.log(this.showMemo);
     }
-}
+  },
+  created() {
+    this.loadClients();
+  },
+  watch: {
+    transactions() {
+      let i,
+        c = 0;
+      for (i in this.transactions) c++;
+      this.items = c;
+    },
+    items() {
+      this.pages = Math.ceil(this.items / 5);
+    }
+  }
+};
 </script>
 
 <style lang="scss" scoped>
-
+table.table-1 {
+  min-height: 295px;
+}
 </style>

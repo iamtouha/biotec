@@ -1,5 +1,5 @@
 <template>
-  <div class="modal" id="exampleModal" tabindex="-1" role="dialog">
+  <div class="modal" id="exampleModal2" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -13,6 +13,7 @@
         </div>
         <div class="modal-footer">
           <button
+            v-if="confirmation"
             type="button"
             @click="$emit('confirm')"
             data-dismiss="modal"

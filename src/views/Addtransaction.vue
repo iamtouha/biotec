@@ -11,30 +11,34 @@
           <p class="w-100 text-danger text-center">{{warning2}}</p>
         </div>
       </div>
-      <ul class="list-group py-3 px-0">
-        <li class="list-group-item row memo justify-content-between">
-          <span class="col-4 text-center text-truncate">name</span>
-          <span class="col-2 text-center text-truncate">pack</span>
-          <span class="col-2 text-center">Unit price</span>
-          <span class="col-2 text-center">units</span>
-          <span class="col-1 text-center">Dlt</span>
-        </li>
-        <li
-          v-for="(product, index) in selectedProduct"
-          :key="products[index]"
-          class="list-group-item row memo justify-content-between"
-        >
-          <span class="col-4 text-center text-truncate">{{product.name}}</span>
-          <span class="col-2 text-center text-truncate">{{product.size}}</span>
-          <span class="col-2 text-center">{{product.price}}</span>
-          <span class="col-2 text-center">{{product.unit}}</span>
-          <span
-            class="col-1 btn btn-outline-danger btn-sm py-1 m-0 float-right"
-            style="font-size:16px;"
-            @click="deletePack(index)"
-          >&times;</span>
-        </li>
-      </ul>
+      <div class="tblContainer">
+        <table class="table">
+          <thead class="thead-light" id="myTable">
+            <tr>
+              <th scope="col">name</th>
+              <th scope="col">pack</th>
+              <th scope="col">price</th>
+              <th scope="col">units</th>
+              <th scope="col">delete</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(product, index) in selectedProduct" :key="products[index]">
+              <th class="text-truncate" scope="row">{{product.name}}</th>
+              <td>{{product.size}}</td>
+              <td>{{product.price}}tk</td>
+              <td>{{product.unit}}tk</td>
+              <td>
+                <span
+                  class="btn btn-outline-danger btn-sm"
+                  style="font-size:16px;"
+                  @click="deletePack(index)"
+                >&times;</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
       <div class="form-row px-2 justify-content-center">
         <vue-single-select
           v-model="productName"
@@ -47,15 +51,15 @@
         ></vue-single-select>
       </div>
       <div v-if="productName" class="form-row px-0 justify-content-center">
-        <select v-model="pack_size" class="custom-select col-5 mr-1">
+        <select v-model="pack_size" class="custom-select col-4 mr-1">
           <option :value="null" selected>pack size</option>
           <option v-for="(price, size) in sizes" :key="sizes[size]" :value="size">{{size}}</option>
         </select>
         <input
           type="number"
           v-model="perUnitPrice"
-          placeholder="price per Unit"
-          class="form-control col-3 ml-1"
+          placeholder=" Unit price"
+          class="form-control col-4 ml-1"
         >
         <input type="number" v-model="unit" placeholder="Units" class="form-control col-3 ml-1">
       </div>
@@ -66,6 +70,7 @@
           class="col-4 btn btn-info mb-5 mx-0"
         >Add Pack</div>
       </div>
+      <Loading v-if="loading"/>
       <h2 class="w-100 text-center">
         {{netPrice}}
         <span style="font-size: 18px m-0 p-0">tk</span>
@@ -79,7 +84,6 @@
         class="btn w-100 position-fixed text-center text-white"
       >
     </form>
-    <Loading v-if="loading"/>
   </div>
 </template>
 
@@ -95,16 +99,13 @@ export default {
     Loading
   },
   computed: {
-    ...mapGetters(["userInfo", "productsInfo", "loading"]),
-    clientType() {
-      return this.userInfo.post == "Area Manager" ? "Dealer" : "Retailer";
-    }
+    ...mapGetters(["userInfo", "productsInfo", "loading", "clientType"])
   },
   data() {
     return {
       products: [],
       productSize: {},
-      productName: {},
+      productName: null,
       selectedClient: null,
       selectedProduct: [],
       pack_size: null,
@@ -119,8 +120,10 @@ export default {
   },
   methods: {
     ...mapActions(["loadOn", "loadOff"]),
+
     addProduct(product, size, unit, perUnitPrice) {
       if (size && unit && perUnitPrice) {
+        console.log(product);
         this.selectedProduct.push({
           name: product.title,
           id: product.id,
@@ -138,7 +141,7 @@ export default {
       this.selectedProduct.splice(i, 1);
     },
     submitProduct() {
-      this.loadOn;
+      this.loadOn();
       db.collection("transactions")
         .doc()
         .set({
@@ -150,11 +153,11 @@ export default {
           time: firebase.firestore.FieldValue.serverTimestamp()
         })
         .then(() => {
-          this.loadOff;
+          this.loadOff();
           this.$router.push("/transactions");
         })
         .catch(err => alert(err));
-      this.loadOff;
+      this.loadOff();
     }
   },
   watch: {
@@ -199,7 +202,7 @@ export default {
         title: product.name
       });
     });
-    this.loadOff;
+    this.loadOff();
   }
 };
 </script>
@@ -221,23 +224,19 @@ div.container {
     z-index: 99;
   }
 }
-.btn-sm {
-  height: 25px;
-  padding: 0px !important;
-}
-li.memo {
-  align-content: space-between;
-  span {
-    margin: 0px 10px;
-    display: inline;
-    padding: 0px;
-  }
-  &:first-child {
-    align-content: space-between;
-    background: #ddd;
+div.tblContainer {
+  width: 100%;
+  overflow-x: scroll;
+  table {
+    th:first-child {
+      min-width: 120px;
+    }
+    font-size: 14px;
     span {
-      padding: 0px;
-      margin: 0px 10px;
+      height: 25px;
+      width: 50px;
+      text-align: center;
+      padding: 0px !important;
     }
   }
 }

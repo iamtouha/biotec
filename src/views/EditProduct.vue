@@ -138,7 +138,6 @@ export default {
         if (!this.pack[size]) {
           this.pack[size] = Number(price);
           this.price = this.size = this.warning = null;
-          console.log(this.pack);
           this.ckey++;
           this.packages++;
         } else {
@@ -160,7 +159,7 @@ export default {
     },
 
     submitEdit() {
-      this.loadOn;
+      this.loadOn();
       db.collection("products")
         .doc(this.$route.params.edtId)
         .update({
@@ -183,7 +182,8 @@ export default {
                     .update({ imageUrl: downloadURL })
                     .then(() => {
                       this.getUserInfo("/");
-                    });
+                    })
+                    .catch(err => alert(err));
                 });
               });
           } else {
@@ -198,12 +198,12 @@ export default {
       .doc(id)
       .get()
       .then(doc => {
-        let i;
-        let c = 0;
-        doc.data();
-        this.name = doc.data().name;
-        this.pack = doc.data().pack;
-        this.type = doc.data().type;
+        let i,
+          c = 0;
+        const products = doc.data();
+        this.name = products.name;
+        this.pack = products.pack;
+        this.type = products.type;
         for (i in this.pack) {
           if (this.pack.hasOwnProperty(i)) {
             c++;
@@ -211,6 +211,7 @@ export default {
         }
         this.packages = c;
       });
+    this.loadOff();
   }
 };
 </script>

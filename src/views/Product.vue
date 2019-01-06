@@ -1,12 +1,12 @@
 <template>
   <div>
     <div class="container mb-5">
-      <modal
-        title="DELETE PRODUCT"
-        text="Do you want to continue?"
-        @confirm="dltProduct"
-        confirmation="confirm"
-      />
+      <modal title="DELETE PRODUCT" @confirm="dltProduct" confirmation="confirm">
+        <p>
+          Do you want to delete product:
+          <b>{{name}}</b>?
+        </p>
+      </modal>
       <div class="row justify-content-center">
         <h3>{{name}}</h3>
       </div>
@@ -40,6 +40,7 @@
         </ul>
       </div>
     </div>
+    <Loader v-if="loading"/>
     <router-link
       :to="'/product/'+this.$route.params.id+'/edit'"
       tag="button"
@@ -54,12 +55,14 @@
   </div>
 </template>
 <script>
-import { mapGetters } from "vuex";
-import db from "./../components/firebaseInit.js";
-import modal from "./../components/Modal.vue";
+import { mapGetters, mapActions } from "vuex";
+import db from "@/components/firebaseInit.js";
+import modal from "@/components/Modal.vue";
+import Loader from "@/components/Loader.vue";
 export default {
   components: {
-    modal
+    modal,
+    Loader
   },
   data() {
     return {
@@ -71,23 +74,25 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["productsInfo"]),
+    ...mapGetters(["productsInfo", "loading"]),
     Pid() {
       return this.$route.params.id;
     }
   },
   methods: {
+    ...mapActions(["loadOn", "loadOff", "getUserInfo"]),
     dltProduct() {
       db.collection("products")
         .doc(this.Pid)
         .delete()
         .then(() => {
-          this.$store.dispatch("getUserInfo", "/");
+          this.getUserInfo("/");
         })
         .catch(err => alert(err));
     }
   },
   created() {
+    this.loadOn();
     let id = this.Pid;
     db.collection("products")
       .doc(id)
@@ -99,6 +104,11 @@ export default {
         this.image = doc.data().imageUrl
           ? doc.data().imageUrl
           : require("./../assets/img/" + doc.data().type + ".svg");
+        this.loadOff();
+      })
+      .catch(err => {
+        this.loadOff();
+        alert(err);
       });
   }
 };
