@@ -316,7 +316,10 @@ export default {
       firebase
         .auth()
         .currentUser.reauthenticateAndRetrieveDataWithCredential(credential)
-        .then(callback())
+        .then(promise=>{
+          console.log(promise)
+          callback()
+        })
         .catch(err => {
           this.loadOff();
           alert(err);
