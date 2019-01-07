@@ -97,6 +97,7 @@ let router = new Router({
         {
           path: "",
           name: "bill",
+          props: true,
           component: Bill,
           meta: {
             requiresAuth: true
@@ -105,6 +106,7 @@ let router = new Router({
         {
           path: "payment",
           name: "payment",
+          props: true,
           component: Payment,
           meta: {
             requiresAuth: true

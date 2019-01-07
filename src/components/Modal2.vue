@@ -1,5 +1,5 @@
 <template>
-  <div class="modal" id="exampleModal2" tabindex="-1" role="dialog">
+  <div class="modal" :id="modalId" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -28,7 +28,15 @@
 
 <script>
 export default {
-  props: ["title", "confirmation", "cancel"]
+  props: ["title", "confirmation", "cancel", "modalId"]
 };
 </script>
 
+<style lang="scss">
+div.modal {
+  .modal-body {
+    max-height: 400px;
+    overflow-y: scroll;
+  }
+}
+</style>

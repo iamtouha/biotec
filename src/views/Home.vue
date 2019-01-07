@@ -8,23 +8,26 @@
     <router-link to="/addproduct" tag="div" class="addproduct">
       <i class="fas fa-plus"></i>
     </router-link>
+    <Loader v-if="loading"/>
   </div>
 </template>
 
 <script>
 import firebase from "firebase";
-import productApp from "./../components/home/Products.vue";
-import coverContainer from "./../components/home/Cover.vue";
+import productApp from "@/components/home/Products.vue";
+import coverContainer from "@/components/home/Cover.vue";
+import Loader from "@/components/Loader.vue";
 import { mapGetters } from "vuex";
 
 export default {
   name: "home",
   components: {
     coverContainer,
-    productApp
+    productApp,
+    Loader
   },
   computed: {
-    ...mapGetters(["userInfo"])
+    ...mapGetters(["userInfo", "loading"])
   }
 };
 </script>

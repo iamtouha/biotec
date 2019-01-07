@@ -125,7 +125,7 @@ export default {
     Loading
   },
   computed: {
-    ...mapGetters(["loading"])
+    ...mapGetters(["loading", "userInfo"])
   },
   data() {
     return {
@@ -173,7 +173,6 @@ export default {
       this.imgFile = e.target.files[0];
       this.imgFileName = this.imgFile.name;
     },
-
     submitProduct() {
       this.loadOn();
       db.collection("products")
@@ -182,14 +181,14 @@ export default {
           name: this.name,
           type: this.product.type,
           pack: this.product.pack,
-          ULed_by: this.$store.getters.userInfo.id,
+          ULed_by: this.userInfo.id,
           time: firebase.firestore.FieldValue.serverTimestamp()
         })
         .then(() => {
           if (this.imgFile) {
             db.collection("products")
               .where("name", "==", this.name)
-              .where("ULed_by", "==", this.$store.getters.userInfo.id)
+              .where("ULed_by", "==", this.userInfo.id)
               .limit(1)
               .get()
               .then(querySnapshot => {
@@ -215,10 +214,10 @@ export default {
         });
     },
     validateAndSubmit() {
-      this.loadOn;
+      this.loadOn();
       db.collection("products")
         .where("name", "==", this.name)
-        .where("ULed_by", "==", this.$store.getters.userInfo.id)
+        .where("ULed_by", "==", this.userInfo.id)
         .get()
         .then(querySnapshot => {
           if (querySnapshot.size) {

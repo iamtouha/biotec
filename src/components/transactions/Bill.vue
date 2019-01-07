@@ -1,7 +1,7 @@
 <template>
   <div class="container mt-4">
-    <Modal :confirmation="null" title="List">
-      <table class="table" :key="ckey">
+    <Modal modalId="exampleModal2" :confirmation="null" title="Product List">
+      <table class="table">
         <thead class="thead-light" id="myTable">
           <tr>
             <th scope="col">Product</th>
@@ -11,7 +11,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr :key="element" v-for="element in showMemo">
+          <tr :key="index" v-for="(element, index) in showMemo">
             <th scope="row">{{element.name}}</th>
             <td>{{element.size}}</td>
             <td>{{element.price}}tk</td>
@@ -32,7 +32,7 @@
       <tbody>
         <tr
           v-for="(element, index) in transactions.slice(from, show)"
-          :key="element"
+          :key="index"
           @click="showList(element.id)"
           data-toggle="modal"
           data-target="#exampleModal2"
@@ -44,7 +44,7 @@
         </tr>
       </tbody>
     </table>
-    <ul class="pagination">
+    <ul v-if="pages>1" class="pagination">
       <li class="page-item">
         <a class="page-link">Goto Page:</a>
       </li>
@@ -136,7 +136,6 @@ export default {
           break;
         }
       }
-      console.log(this.showMemo);
     }
   },
   created() {
@@ -155,9 +154,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss" scoped>
-table.table-1 {
-  min-height: 295px;
-}
-</style>

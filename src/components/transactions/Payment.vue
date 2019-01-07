@@ -18,7 +18,7 @@
         </tr>
       </tbody>
     </table>
-    <ul class="pagination">
+    <ul v-if="pages>1" class="pagination">
       <li class="page-item">
         <a class="page-link">Goto Page:</a>
       </li>
@@ -117,5 +117,3 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-</style>
