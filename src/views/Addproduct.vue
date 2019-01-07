@@ -66,7 +66,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr :key="packs[key]" v-for="(value, key, index) in packs()">
+          <tr :key="value" v-for="(value, key, index) in packs()">
             <th scope="row">{{index + 1}}</th>
             <td>{{key}}</td>
             <td>{{value}}tk</td>

@@ -59,7 +59,7 @@
       </div>
       <h3 class="text-center w-100 my-3">Product pack sizes</h3>
       <ul class="list-group mb-3" :key="ckey">
-        <li class="list-group-item d-flex" :key="pack[key]" v-for="(value, key, index) in pack">
+        <li class="list-group-item d-flex" :key="key" v-for="(value, key, index) in pack">
           <span class="col-1">{{index+1}}.</span>
           <span class="col-6 text-left">{{key}}</span>
           <span class="col-4">{{value}}tk</span>

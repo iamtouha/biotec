@@ -1,28 +1,30 @@
 <template>
   <form>
-    <div class="container px-5 w-100 justify-content-center">
-      <div class="row loader">
-        <div class="mx-auto position-relative">
-          <span v-if="fileName" class="bg-danger" @click="removeImg">&times;</span>
-          <img class="img-thumbnail" :src="imgUrl" alt="User profile">
+    <div class="contain px-5 w-100 justify-content-center">
+      <div class="wrapper">
+        <div class="row loader">
+          <div class="mx-auto position-relative">
+            <span v-if="fileName" class="bg-danger" @click="removeImg">&times;</span>
+            <img class="img-thumbnail" :src="imgUrl" alt="User profile">
+          </div>
         </div>
-      </div>
-      <div class="wrapper d-block">
-        <div class="row mt-2 justify-content-center">
-          <button class="btn btn-lg btn-info" @click="imgPreview">
-            <i class="fas fa-camera"></i> Select Photo
-          </button>
-          <input
-            type="file"
-            ref="imgInput"
-            @change="onFileSelected"
-            class="d-none"
-            accept="image/jpg"
-          >
-        </div>
-        <div class="row justify-content-center">
-          <button @click="submitPhoto" type="submit" class="btn btn-primary mt-4">Submit</button>
-          <input type="reset" class="d-none" ref="removeImg">
+        <div class="d-block">
+          <div class="row mt-2 justify-content-center">
+            <button class="btn btn-lg btn-info" @click="imgPreview">
+              <i class="fas fa-camera"></i> Select Photo
+            </button>
+            <input
+              type="file"
+              ref="imgInput"
+              @change="onFileSelected"
+              class="d-none"
+              accept="image/jpg"
+            >
+          </div>
+          <div class="row justify-content-center">
+            <button @click="submitPhoto" type="submit" class="btn btn-primary mt-1">Submit</button>
+            <input type="reset" class="d-none" ref="removeImg">
+          </div>
         </div>
       </div>
     </div>
@@ -113,32 +115,50 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-div.container {
+div.contain {
+  color: #fff;
+  top: 0px;
+  right: 0px;
+  width: 100%;
+  height: 100vh;
+  position: fixed;
+  background: #01796f;
+  z-index: 999;
   text-align: left;
-  margin-top: 90px;
-  div.loader {
-    height: 200px;
-    text-align: center;
-    position: relative;
-    margin-top: 120px;
+  input {
+    box-sizing: border-box;
   }
-  span {
-    width: 25px;
-    height: 25px;
-    top: -5px;
-    left: -5px;
-    padding: 5px;
-    border-radius: 50%;
+  div.wrapper {
+    padding: 30px;
+    left: 50%;
+    top: 50%;
     position: absolute;
-    text-align: center;
-    display: block;
-    color: #fff;
-    line-height: 12px;
-    font-size: 25px;
+    width: 100%;
+    transform: translate(-50%, -50%);
+    div.loader {
+      height: 160px;
+      text-align: center;
+      position: relative;
+    }
+    span {
+      width: 25px;
+      height: 25px;
+      top: -5px;
+      left: -5px;
+      padding: 5px;
+      border-radius: 50%;
+      position: absolute;
+      text-align: center;
+      display: block;
+      color: #fff;
+      line-height: 12px;
+      font-size: 25px;
+    }
+
+    img {
+      width: 150px;
+      height: 150px;
+    }
   }
-}
-img {
-  width: 150px;
-  height: 150px;
 }
 </style>

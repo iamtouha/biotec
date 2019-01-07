@@ -71,20 +71,21 @@ export default new Vuex.Store({
           .get()
           .then(querySnapshot => {
             state.products = []
-            querySnapshot.forEach(doc => {
-              let img = doc.data().imageUrl ? doc.data().imageUrl : require('./assets/img/' + doc.data().type + '.svg')
-              state.products.push({
-                id: doc.id,
-                name: doc.data().name,
-                type: doc.data().type,
-                pack: doc.data().pack,
-                imgUrl: img
-              });
-              state.loader = false
-              if (payload)
-                router.push(payload);
+            if (querySnapShot.size) {
+              querySnapshot.forEach(doc => {
+                let img = doc.data().imageUrl ? doc.data().imageUrl : require('./assets/img/' + doc.data().type + '.svg')
+                state.products.push({
+                  id: doc.id,
+                  name: doc.data().name,
+                  type: doc.data().type,
+                  pack: doc.data().pack,
+                  imgUrl: img
+                });
 
-            });
+              });
+            }
+            state.loader = false
+            if (payload) { router.push(payload); }
           })
           .catch(err => {
             alert(err)

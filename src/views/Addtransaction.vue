@@ -6,7 +6,7 @@
         <div class="form-group col-12">
           <select class="custom-select" v-model="selectedClient">
             <option :value="null" selected>Select {{clientType}}</option>
-            <option v-for="client in clients" :key="clients[client]" :value="client">{{client.name}}</option>
+            <option v-for="client in clients" :key="client" :value="client">{{client.name}}</option>
           </select>
           <p class="w-100 text-danger text-center">{{warning2}}</p>
         </div>
@@ -23,7 +23,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(product, index) in selectedProduct" :key="products[index]">
+            <tr v-for="(product, index) in selectedProduct" :key="product">
               <th class="text-truncate" scope="row">{{product.name}}</th>
               <td>{{product.size}}</td>
               <td>{{product.price}}tk</td>
@@ -53,7 +53,7 @@
       <div v-if="productName" class="form-row px-0 justify-content-center">
         <select v-model="pack_size" class="custom-select col-4 mr-1">
           <option :value="null" selected>pack size</option>
-          <option v-for="(price, size) in sizes" :key="sizes[size]" :value="size">{{size}}</option>
+          <option v-for="(price, size) in sizes" :key="size" :value="size">{{size}}</option>
         </select>
         <input
           type="number"

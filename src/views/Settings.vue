@@ -54,22 +54,21 @@
                   class="btn btn-info my-2 mx-auto"
                 >Add</button>
               </div>
-              <ul class="list-group mb-3 px-0">
-                <li
-                  class="list-group-item d-flex px-0"
-                  :key="clients[element]"
-                  v-for="(element, index) in clients"
-                >
-                  <span class="col-1 text-left">{{index+1}}</span>
-                  <span class="col-5 text-truncate text-left">{{element.name}}</span>
-                  <span class="col-3 text-truncate">{{element.area}}</span>
-                  <span
-                    class="col-2 btn btn-outline-danger btn-sm py-0"
-                    style="font-size:14px;"
-                    @click="deleteClient(element.id, index)"
-                  >&times;</span>
-                </li>
-              </ul>
+              <table class="table">
+                <tbody>
+                  <tr :key="clients[element]" v-for="(element, index) in clients">
+                    <th class="text-truncate" scope="row">{{element.name}}</th>
+                    <td>{{element.area}}</td>
+                    <td>
+                      <span
+                        class="btn btn-outline-danger btn-sm"
+                        style="font-size:16px; height: 25px; line-height: 16px"
+                        @click="deleteClient(element.id, index)"
+                      >&times;</span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </form>
           </div>
         </div>
@@ -117,14 +116,19 @@
         </div>
       </div>
     </div>
+    <Loader v-if="loading"/>
   </div>
 </template>
 
 <script>
 import firebase from "firebase";
-import { mapGetters } from "vuex";
-import db from "./../components/firebaseInit.js";
+import { mapGetters, mapActions } from "vuex";
+import db from "@/components/firebaseInit.js";
+import Loader from "@/components/Loader.vue";
 export default {
+  components: {
+    Loader
+  },
   data() {
     return {
       isLoggedIn: false,
@@ -136,9 +140,10 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["userInfo", "clientType"])
+    ...mapGetters(["userInfo", "clientType", "loading"])
   },
   methods: {
+    ...mapActions(["loadOn", "loadOff"]),
     logOut() {
       firebase
         .auth()
@@ -149,6 +154,7 @@ export default {
     },
     addClient() {
       if (this.clientName && this.clientArea) {
+        this.loadOn();
         db.collection(this.clientType)
           .where("name", "==", this.clientName)
           .where("ref", "==", this.userInfo.id)
@@ -156,6 +162,7 @@ export default {
           .then(querySnapshot => {
             if (querySnapshot.size) {
               this.warning = this.clientType + " already Exists";
+              this.loadOff();
             } else {
               db.collection(this.clientType)
                 .doc()
@@ -170,11 +177,14 @@ export default {
                   this.clientName = null;
                   this.clientArea = null;
                   this.updateClients();
+                  this.loadOff();
                 })
                 .catch(err => alert(err));
             }
+            this.loadOff();
           });
       } else {
+        this.loadOff();
         this.warning = "Insert Name and Area";
       }
     },

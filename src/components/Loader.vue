@@ -13,10 +13,11 @@ export default {
 </script>
 <style lang="scss" scoped>
 .loader {
-  z-index: 999;
+  z-index: 1001;
   position: absolute;
-  top: 48%;
-  left: 48%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   width: 50px !important;
   height: 50px !important;
   padding: 5px;

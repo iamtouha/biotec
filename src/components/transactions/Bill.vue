@@ -32,7 +32,7 @@
       <tbody>
         <tr
           v-for="(element, index) in transactions.slice(from, show)"
-          :key="transactions[index]"
+          :key="element"
           @click="showList(element.id)"
           data-toggle="modal"
           data-target="#exampleModal2"
@@ -85,36 +85,40 @@ export default {
         .orderBy("time", "desc")
         .get()
         .then(querySnap => {
-          const monthNames = [
-            "Jan",
-            "Feb",
-            "Mar",
-            "Apr",
-            "May",
-            "June",
-            "July",
-            "Aug",
-            "Sept",
-            "Oct",
-            "Nov",
-            "Dec"
-          ];
-          querySnap.forEach(doc => {
-            const entry = doc.data();
-            const timeToDate = entry.time.toDate();
-            let date = timeToDate.getDate();
-            let month = monthNames[timeToDate.getMonth()];
-            let year = timeToDate.getFullYear();
+          if (querySnap.size) {
+            const monthNames = [
+              "Jan",
+              "Feb",
+              "Mar",
+              "Apr",
+              "May",
+              "June",
+              "July",
+              "Aug",
+              "Sept",
+              "Oct",
+              "Nov",
+              "Dec"
+            ];
+            querySnap.forEach(doc => {
+              const entry = doc.data();
+              const timeToDate = entry.time.toDate();
+              let date = timeToDate.getDate();
+              let month = monthNames[timeToDate.getMonth()];
+              let year = timeToDate.getFullYear();
 
-            this.transactions.push({
-              id: doc.id,
-              name: entry.clientName,
-              date: String(date) + "-" + month + "-" + String(year),
-              products: entry.products,
-              bill: entry.netPrice
+              this.transactions.push({
+                id: doc.id,
+                name: entry.clientName,
+                date: String(date) + "-" + month + "-" + String(year),
+                products: entry.products,
+                bill: entry.netPrice
+              });
+              this.loadOff();
             });
+          } else {
             this.loadOff();
-          });
+          }
         })
         .catch(err => {
           alert(err);

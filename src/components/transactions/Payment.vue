@@ -57,34 +57,38 @@ export default {
         .orderBy("time", "desc")
         .get()
         .then(querySnap => {
-          const monthNames = [
-            "Jan",
-            "Feb",
-            "Mar",
-            "Apr",
-            "May",
-            "June",
-            "July",
-            "Aug",
-            "Sept",
-            "Oct",
-            "Nov",
-            "Dec"
-          ];
-          querySnap.forEach(doc => {
-            const entry = doc.data();
-            const timeToDate = entry.time.toDate();
-            let date = timeToDate.getDate();
-            let month = monthNames[timeToDate.getMonth()];
-            let year = timeToDate.getFullYear();
+          if (querySnap.size) {
+            const monthNames = [
+              "Jan",
+              "Feb",
+              "Mar",
+              "Apr",
+              "May",
+              "June",
+              "July",
+              "Aug",
+              "Sept",
+              "Oct",
+              "Nov",
+              "Dec"
+            ];
+            querySnap.forEach(doc => {
+              const entry = doc.data();
+              const timeToDate = entry.time.toDate();
+              let date = timeToDate.getDate();
+              let month = monthNames[timeToDate.getMonth()];
+              let year = timeToDate.getFullYear();
 
-            this.transactions.push({
-              name: entry.clientName,
-              date: String(date) + "-" + month + "-" + String(year),
-              bill: entry.amount
+              this.transactions.push({
+                name: entry.clientName,
+                date: String(date) + "-" + month + "-" + String(year),
+                bill: entry.amount
+              });
+              this.loadOff();
             });
+          } else {
             this.loadOff();
-          });
+          }
         })
         .catch(err => {
           alert(err);

@@ -1,71 +1,75 @@
 <template>
-  <div class="container px-5">
-    <form>
-      <h1 class="w-100 text-center" style="font-size: 35px;">Create account</h1>
-      <div class="row">
-        <div class="col-12">
-          <input
-            type="text"
-            class="form-control"
-            v-model="firstName"
-            placeholder="First name"
-            required
-          >
+  <div class="contain px-5">
+    <div class="wrapper">
+      <form>
+        <h1 class="w-100 text-center" style="font-size: 35px;">Create account</h1>
+        <div class="row">
+          <div class="col-12">
+            <input
+              type="text"
+              maxlength="16"
+              class="form-control"
+              v-model="firstName"
+              placeholder="First name"
+              required
+            >
+          </div>
         </div>
-      </div>
-      <div class="row mt-2">
-        <div class="col-12">
-          <input
-            type="text"
-            class="form-control"
-            v-model="lastName"
-            placeholder="Last name"
-            required
-          >
+        <div class="row mt-2 mb-4">
+          <div class="col-12">
+            <input
+              maxlength="16"
+              type="text"
+              class="form-control"
+              v-model="lastName"
+              placeholder="Last name"
+              required
+            >
+          </div>
         </div>
-      </div>
-      <div class="row mt-2">
-        <div class="col-12">
-          <select class="custom-select" v-model="post">
-            <option selected>Select Post</option>
-            <option value="Area Manager">Area Manager</option>
-            <option value="Marketing Officer">Marketing Officer</option>
-          </select>
+        <div class="row mt-2">
+          <div class="col-12">
+            <select class="custom-select" v-model="post">
+              <option value disabled selected>Select Post</option>
+              <option value="Area Manager">Area Manager</option>
+              <option value="Marketing Officer">Marketing Officer</option>
+            </select>
+          </div>
         </div>
-      </div>
-      <div class="row mt-2">
-        <div class="col-12">
-          <input
-            type="text"
-            class="form-control"
-            v-model="area"
-            placeholder="Area"
-            maxlength="40"
-            required
-          >
+        <div class="row mt-2 mb-4">
+          <div class="col-12">
+            <input
+              type="text"
+              class="form-control"
+              v-model="area"
+              placeholder="Area"
+              maxlength="32"
+              required
+            >
+          </div>
         </div>
-      </div>
-      <div class="row mt-2">
-        <div class="col-12">
-          <input
-            type="text"
-            class="form-control"
-            v-model="phone"
-            placeholder="Phone No"
-            maxlength="11"
-            required
-          >
+        <div class="row mt-2">
+          <div class="col-12">
+            <input
+              type="text"
+              class="form-control"
+              v-model="phone"
+              placeholder="Phone No"
+              maxlength="11"
+              required
+            >
+          </div>
         </div>
-      </div>
-      <div class="row mt-2">
-        <div class="col-12">
-          <input type="text" class="form-control" :value="mail" placeholder="mail" readonly>
+        <div class="row mt-2">
+          <div class="col-12">
+            <input type="text" class="form-control" :value="mail" placeholder="mail" readonly>
+          </div>
         </div>
-      </div>
-      <p class="w-100 text-danger text-center">{{warning}}</p>
-      <button @click="submitInfo" type="submit" class="btn btn-primary mt-4 float-right">Next</button>
-    </form>
-    <Loading v-if="loading"/>
+        <p class="w-100 text-danger text-center">{{warning}}</p>
+        <button @click.prevent="submitInfo" type="submit" class="btn btn-info mt-4 float-right">Next</button>
+      </form>
+      <Loading v-if="loading"/>
+    </div>
   </div>
 </template>
 <script>
@@ -83,18 +87,18 @@ export default {
       lastName: null,
       area: null,
       phone: null,
-      post: null,
+      post: "",
       mail: null,
       warning: null
     };
   },
   computed: {
-    ...mapGetters(["loading"])
+    ...mapGetters(["loading", "userInfo"])
   },
   methods: {
     ...mapActions(["loadOn", "loadOff", "getUserInfo", "getEmail"]),
-    submitInfo(e) {
-      e.preventDefault();
+
+    submitInfo() {
       if (
         this.firstName &&
         this.lastName &&
@@ -115,7 +119,6 @@ export default {
             post: this.post
           })
           .then(() => {
-            this.getEmail(this.mail);
             this.getUserInfo("/addphoto");
           })
           .catch(error => {
@@ -140,20 +143,42 @@ export default {
         });
     }
   },
+  watch: {
+    mail() {
+      this.validMail(this.mail);
+      this.getEmail(this.mail);
+    },
+    userInfo() {
+      console.log(this.userInfo);
+    }
+  },
   created() {
     this.mail = firebase.auth().currentUser.email;
-    this.validMail(this.mail);
     this.loadOff();
   }
 };
 </script>
 <style lang="scss" scoped>
-div.container {
+div.contain {
+  color: #fff;
+  top: 0px;
+  right: 0px;
+  width: 100%;
+  height: 100vh;
+  position: fixed;
+  background: #01796f;
+  z-index: 999;
   text-align: left;
-  margin-top: 90px;
-}
-img {
-  width: 150px;
-  height: 150px;
+  input {
+    box-sizing: border-box;
+  }
+  div.wrapper {
+    padding: 30px;
+    left: 50%;
+    top: 50%;
+    position: absolute;
+    width: 100%;
+    transform: translate(-50%, -50%);
+  }
 }
 </style>
