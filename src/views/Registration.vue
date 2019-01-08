@@ -35,7 +35,18 @@
             placeholder="Enter password again"
             required
           >
-          <small class="text-danger">{{warning}}</small>
+          <div class="form-group mt-3">
+            <label for="refId">Referance ID</label>
+            <input
+              type="text"
+              id="refId"
+              v-model="refId"
+              placeholder="Enter Referance Id"
+              class="form-control"
+              required
+            >
+          </div>
+          <p class="text-white">{{warning}}</p>
         </div>
 
         <div class="row w-100 m-0">
@@ -48,10 +59,12 @@
 </template>
 <script>
 import firebase from "firebase";
+import db from "@/components/firebaseInit";
 export default {
   name: "register",
   data() {
     return {
+      refId: "",
       email: "",
       password: "",
       rePassword: "",
@@ -62,18 +75,25 @@ export default {
     register(e) {
       e.preventDefault();
       if (this.password == this.rePassword) {
-        this.warning = "";
-        firebase
-          .auth()
-          .createUserWithEmailAndPassword(this.email, this.password)
-          .then(user => {
-            this.$store.dispatch("getEmail", this.mail);
-            alert("Account created for " + this.email);
-            this.$router.push("/create");
+        db.collection("user")
+          .doc(this.refId)
+          .get()
+          .then(doc => {
+            if (doc.exists && doc.data().approved) {
+              this.warning = "";
+              firebase
+                .auth()
+                .createUserWithEmailAndPassword(this.email, this.password)
+                .then(user => this.$store.dispatch("getEmail", this.email))
+                .then(() => this.$router.push("/create/" + this.refId))
+                .catch(err => {
+                  alert(err.message);
+                });
+            } else {
+              this.warning = "refId doesn't exist!";
+            }
           })
-          .catch(err => {
-            alert(err.message);
-          });
+          .catch(err => alert(err));
       } else {
         this.warning = "Passwords don't match!";
       }

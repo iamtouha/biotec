@@ -1,8 +1,13 @@
 <template>
   <div class="contain">
+    <a href="https://facebook.com/touha99" class="credit">credits</a>
+    <div class="intro text-center">
+      <img src="@/assets/biotech-w.svg" alt="biotech ltd">
+      <p class="w-100 text-white m-0">A biotech inventory management app</p>
+      <small class="w-100 text-white m-0">beta version: 0.2</small>
+    </div>
     <div class="wrapper">
       <form>
-        <h1 class="w-100 text-center">Log In</h1>
         <div class="form-group">
           <label for="exampleInputEmail1">Email address</label>
           <input
@@ -36,6 +41,7 @@
 </template>
 <script>
 import firebase from "firebase";
+import db from "@/components/firebaseInit.js";
 export default {
   name: "register",
   data() {
@@ -51,9 +57,20 @@ export default {
         .auth()
         .signInWithEmailAndPassword(this.email, this.password)
         .then(
-          user => {
-            alert("Account signed in for" + this.email);
-            this.$router.push("/");
+          () => {
+            db.collection("user")
+              .where("email", "==", this.email)
+              .get()
+              .then(querySnapshot => {
+                if (querySnapshot.size) {
+                  this.$router.push("/");
+                } else {
+                  firebase
+                    .auth()
+                    .currentUser.delete()
+                    .then(() => this.$router.push("/registration"));
+                }
+              });
           },
           err => {
             alert(err.message);
@@ -65,6 +82,12 @@ export default {
 </script>
 <style lang="scss" scoped>
 div.contain {
+  .credits {
+    display: block;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+  }
   color: #fff;
   top: 0px;
   right: 0px;
@@ -77,13 +100,23 @@ div.contain {
   input {
     box-sizing: border-box;
   }
+  div.intro {
+    width: 350px;
+    margin: 0 auto;
+    img {
+      display: block;
+      margin: 0 auto;
+      width: 180px;
+      height: 180px;
+    }
+  }
   div.wrapper {
     padding: 30px;
     left: 50%;
-    top: 50%;
+    top: 70%;
     position: absolute;
     width: 100%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -60%);
   }
 }
 </style>

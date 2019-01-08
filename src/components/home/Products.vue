@@ -1,6 +1,6 @@
 <template>
   <div class="row">
-    <div v-for="(product,key) in productsInfo" class="col-4" :key="productsInfo[key]">
+    <div v-for="(product,key) in productsInfo" class="col-md-3 col-4" :key="productsInfo[key]">
       <router-link :to="'product/'+ product.id" tag="div" class="wrapper">
         <div
           ref="productThumb"

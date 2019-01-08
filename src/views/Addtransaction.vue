@@ -27,7 +27,7 @@
               <th class="text-truncate" scope="row">{{product.name}}</th>
               <td>{{product.size}}</td>
               <td>{{product.price}}tk</td>
-              <td>{{product.unit}}tk</td>
+              <td>{{product.unit}}</td>
               <td>
                 <span
                   class="btn btn-outline-danger btn-sm"
@@ -71,7 +71,7 @@
         >Add Pack</div>
       </div>
       <Loading v-if="loading"/>
-      <h2 class="w-100 text-center">
+      <h2 class="w-100 text-center mb-5">
         {{netPrice}}
         <span style="font-size: 18px m-0 p-0">tk</span>
       </h2>
@@ -99,7 +99,13 @@ export default {
     Loading
   },
   computed: {
-    ...mapGetters(["userInfo", "productsInfo", "loading", "clientType"])
+    ...mapGetters([
+      "userInfo",
+      "productsInfo",
+      "loading",
+      "clientType",
+      "isApproved"
+    ])
   },
   data() {
     return {
@@ -141,23 +147,27 @@ export default {
       this.selectedProduct.splice(i, 1);
     },
     submitProduct() {
-      this.loadOn();
-      db.collection("transactions")
-        .doc()
-        .set({
-          products: this.selectedProduct,
-          clientId: this.selectedClient.id,
-          refId: this.userInfo.id,
-          clientName: this.selectedClient.name,
-          netPrice: this.netPrice,
-          time: firebase.firestore.FieldValue.serverTimestamp()
-        })
-        .then(() => {
-          this.loadOff();
-          this.$router.push("/transactions");
-        })
-        .catch(err => alert(err));
-      this.loadOff();
+      if (this.isApproved) {
+        this.loadOn();
+        db.collection("transactions")
+          .doc()
+          .set({
+            products: this.selectedProduct,
+            clientId: this.selectedClient.id,
+            refId: this.userInfo.id,
+            clientName: this.selectedClient.name,
+            netPrice: this.netPrice,
+            time: firebase.firestore.FieldValue.serverTimestamp()
+          })
+          .then(() => {
+            this.loadOff();
+            this.$router.push("/transactions");
+          })
+          .catch(err => alert(err));
+        this.loadOff();
+      } else {
+        alert("Please get approval first");
+      }
     }
   },
   watch: {

@@ -2,10 +2,15 @@
   <div>
     <navigator-app v-once/>
     <router-view :key="ckey"></router-view>
-    <router-link v-if="routeName == 'bill'" to="/addtransaction" tag="div" class="addtrans">
+    <router-link
+      v-if="routeName == 'bill' && isApproved"
+      to="/addtransaction"
+      tag="div"
+      class="addtrans"
+    >
       <i class="fas fa-plus"></i>
     </router-link>
-    <div v-else data-toggle="modal" data-target="#exampleModal" class="addtrans">
+    <div v-else-if="isApproved" data-toggle="modal" data-target="#exampleModal" class="addtrans">
       <i class="fas fa-plus"></i>
     </div>
     <Modal confirmation="Add" title="Add Payment" @confirm="pay()">
@@ -73,12 +78,13 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["userInfo", "clientType"]),
+    ...mapGetters(["userInfo", "clientType", "isApproved"]),
     routeName() {
       return this.$route.name;
     }
   },
   created() {
+    console.log(this.isApproved);
     db.collection(this.clientType)
       .where("ref", "==", this.userInfo.id)
       .get()
@@ -105,12 +111,17 @@ $primary: #01796f;
   width: 70px;
   height: 70px;
   padding: 15px;
+  cursor: pointer;
   position: fixed;
   background: $primary;
   border-radius: 50%;
   bottom: 20px;
   right: 20px;
   box-shadow: 2px 2px 6px 0px rgba(0, 0, 0, 0.6);
+  @media screen and (min-width: 500px) {
+    bottom: 20px;
+    right: 17%;
+  }
   i {
     font-size: 40px;
     text-align: center;

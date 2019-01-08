@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="justify-content-center">
     <div class="row shadow-wrapper">
       <div class="shadow text-center">
         <p class="my-0">total:</p>
@@ -136,6 +136,11 @@ div.shadow-wrapper {
   z-index: 99;
   height: 100px;
   width: 100%;
+  max-width: 500px;
+  @media screen and (min-width: 500px) {
+    left: 50%;
+    transform: translateX(-50%);
+  }
   box-sizing: border-box;
   position: fixed;
   top: 90px;

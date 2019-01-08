@@ -14,14 +14,18 @@ export default new Vuex.Store({
       name: null,
       post: null,
       imgUrl: null,
-      temp: null
+      referance: null,
+      company: 'Biotech Agrovat Ltd.'
     },
+    approved: false,
     client: null,
     loader: false,
     products: [],
-    company: 'Biotech Agrovet Ltd.'
   },
   getters: {
+    isApproved: state => {
+      return state.approved
+    },
     loading: state => {
       return state.loader
     },
@@ -57,6 +61,8 @@ export default new Vuex.Store({
           state.user.id = doc.id;
           state.user.name = user.name;
           state.user.post = user.post;
+          state.approved = user.approved;
+          state.user.referance = user.refId;
           state.user.imgUrl = user.imageUrl;
           if (user.post == "Area Manager") {
             state.client = "Dealer";
@@ -85,7 +91,9 @@ export default new Vuex.Store({
               });
             }
             state.loader = false
-            if (payload) { router.push(payload); }
+            if (payload) {
+              router.push(payload);
+            }
           })
           .catch(err => {
             alert(err)

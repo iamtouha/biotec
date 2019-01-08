@@ -13,8 +13,7 @@ Vue.use(Router);
 let router = new Router({
   mode: "history",
   base: process.env.BASE_URL,
-  routes: [
-    {
+  routes: [{
       path: "/",
       name: "home",
       component: Home,
@@ -50,9 +49,10 @@ let router = new Router({
       }
     },
     {
-      path: "/create",
+      path: "/create/:refId",
       name: "CreateAccount",
       component: CreateAcc,
+      props: true,
       meta: {
         requiresAuth: true
       }
@@ -93,8 +93,7 @@ let router = new Router({
       path: "/transactions",
       name: "Transactions",
       component: () => import("./views/Transactions.vue"),
-      children: [
-        {
+      children: [{
           path: "",
           name: "bill",
           props: true,

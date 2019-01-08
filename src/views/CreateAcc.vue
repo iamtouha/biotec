@@ -48,24 +48,27 @@
             >
           </div>
         </div>
-        <div class="row mt-2">
-          <div class="col-12">
+        <div class="row mt-2 px-3">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">+880</span>
+            </div>
             <input
               type="text"
-              class="form-control"
-              v-model="phone"
-              placeholder="Phone No"
               maxlength="11"
-              required
+              placeholder="Phone No"
+              v-model="phone"
+              class="form-control"
             >
           </div>
+          <p v-if="warning3!==true" class="text-white m-0">{{warning3}}</p>
         </div>
         <div class="row mt-2">
           <div class="col-12">
             <input type="text" class="form-control" :value="mail" placeholder="mail" readonly>
           </div>
         </div>
-        <p class="w-100 text-danger text-center">{{warning}}</p>
+        <p class="w-100 text-white text-center">{{warning}}</p>
         <button @click.prevent="submitInfo" type="submit" class="btn btn-info mt-4 float-right">Next</button>
       </form>
       <Loading v-if="loading"/>
@@ -89,6 +92,7 @@ export default {
       phone: null,
       post: "",
       mail: null,
+      warning3: null,
       warning: null
     };
   },
@@ -113,10 +117,12 @@ export default {
           .doc()
           .set({
             name: fullName,
-            phone: this.phone,
+            phone: Number(this.phone),
             area: this.area,
             email: this.mail,
-            post: this.post
+            post: this.post,
+            refId: this.$route.params.refId,
+            approved: false
           })
           .then(() => {
             this.getUserInfo("/addphoto");
@@ -144,6 +150,18 @@ export default {
     }
   },
   watch: {
+    phone() {
+      const n = Number(this.phone);
+      const str = String(n);
+      const l = str.length;
+      if (n == NaN || Number(str[0]) != 1 || l > 10) {
+        this.warning3 = "Enter a valid Phone No.";
+      } else if (l == 10) {
+        this.warning3 = true;
+      } else {
+        this.warning3 = null;
+      }
+    },
     mail() {
       this.validMail(this.mail);
       this.getEmail(this.mail);

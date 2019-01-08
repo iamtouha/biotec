@@ -1,11 +1,22 @@
 <template>
   <div class="wrapper">
     <div id="cover"></div>
-    <div id="content">
-      <img :src="userInfo.imgUrl" alt="user avater" class="img-thumbnail">
-      <h2>{{userInfo.name}}</h2>
-      <h4>{{userInfo.post}}</h4>
-      <h3>Biotech agrovat ltd.</h3>
+    <div id="content" class="container">
+      <div class="row">
+        <img :src="userInfo.imgUrl" alt="user avater" class="img-thumbnail float-left ml-2">
+        <div
+          class="col col-lg-3 float-left text-left d-flex"
+          style="flex-direction:column; justify-content:space-around;"
+        >
+          <h2>{{userInfo.name}}</h2>
+          <h4>{{userInfo.post}}</h4>
+          <h3>{{userInfo.company}}</h3>
+          <h4>
+            ref Id:
+            <span style="font-family: 'agencyFb', sans-serif;">{{userInfo.id}}</span>
+          </h4>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -31,6 +42,10 @@ $txtshad: 0px;
   font-family: agencyFb;
   src: url("./../../assets/AGENCYR.TTF");
 }
+@font-face {
+  font-family: robotoCondensed;
+  src: url("./../../assets/RobotoCondensed-Regular.ttf");
+}
 #cover {
   width: 100%;
   height: 250px;
@@ -44,43 +59,43 @@ $txtshad: 0px;
   height: 300px;
   width: 100%;
   position: relative;
+  box-sizing: border-box;
 }
 #content {
-  position: absolute;
   color: $txt;
-  width: 100%;
+  padding-top: 90px;
   height: 300px;
   text-shadow: $txtshad;
-  font-family: "agencyFb", sans-serif;
+  font-family: "robotoCondensed", sans-serif;
+  @media screen and (min-width: 600px) {
+    left: 20px;
+    padding-left: 100px;
+    img {
+      width: 200px !important;
+      height: 200px !important;
+      border: 1px solid #333;
+      padding: 1px;
+    }
+  }
   img {
     width: 150px;
     height: 150px;
     border: 1px solid #333;
     padding: 1px;
-    left: 20px;
-    position: absolute;
-    top: 100px;
   }
   h2 {
-    position: absolute;
-    top: 105px;
-    left: 180px;
     color: $txt;
     font-size: 45px;
     font-weight: 300;
+    font-size: 36px;
   }
   h3 {
-    position: absolute;
-    top: 200px;
-    left: 180px;
     color: $txt;
     font-size: 25px;
   }
   h4 {
-    position: absolute;
-    top: 165px;
-    left: 180px;
     color: $txt;
+    font-size: 21px;
   }
   @media screen and (max-width: 400px) {
     img {
@@ -92,17 +107,13 @@ $txtshad: 0px;
       top: 100px;
     }
     h2 {
-      top: 110px;
-      left: 160px;
-      font-size: 35px;
+      font-size: 33px;
     }
     h3 {
-      top: 190px;
-      left: 160px;
+      font-size: 23px;
     }
     h4 {
-      top: 155px;
-      left: 160px;
+      font-size: 21px;
     }
   }
 }

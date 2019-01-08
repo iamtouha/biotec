@@ -174,44 +174,48 @@ export default {
       this.imgFileName = this.imgFile.name;
     },
     submitProduct() {
-      this.loadOn();
-      db.collection("products")
-        .doc()
-        .set({
-          name: this.name,
-          type: this.product.type,
-          pack: this.product.pack,
-          ULed_by: this.userInfo.id,
-          time: firebase.firestore.FieldValue.serverTimestamp()
-        })
-        .then(() => {
-          if (this.imgFile) {
-            db.collection("products")
-              .where("name", "==", this.name)
-              .where("ULed_by", "==", this.userInfo.id)
-              .limit(1)
-              .get()
-              .then(querySnapshot => {
-                const pId = querySnapshot.docs[0].id;
-                firebase
-                  .storage()
-                  .ref("products/" + pId + ".jpg")
-                  .put(this.imgFile)
-                  .then(Response => {
-                    Response.ref.getDownloadURL().then(downloadURL => {
-                      db.collection("products")
-                        .doc(pId)
-                        .update({ imageUrl: downloadURL })
-                        .then(() => {
-                          this.getUserInfo("/");
-                        });
+      if (this.isApproved) {
+        this.loadOn();
+        db.collection("products")
+          .doc()
+          .set({
+            name: this.name,
+            type: this.product.type,
+            pack: this.product.pack,
+            ULed_by: this.userInfo.id,
+            time: firebase.firestore.FieldValue.serverTimestamp()
+          })
+          .then(() => {
+            if (this.imgFile) {
+              db.collection("products")
+                .where("name", "==", this.name)
+                .where("ULed_by", "==", this.userInfo.id)
+                .limit(1)
+                .get()
+                .then(querySnapshot => {
+                  const pId = querySnapshot.docs[0].id;
+                  firebase
+                    .storage()
+                    .ref("products/" + pId + ".jpg")
+                    .put(this.imgFile)
+                    .then(Response => {
+                      Response.ref.getDownloadURL().then(downloadURL => {
+                        db.collection("products")
+                          .doc(pId)
+                          .update({ imageUrl: downloadURL })
+                          .then(() => {
+                            this.getUserInfo("/");
+                          });
+                      });
                     });
-                  });
-              });
-          } else {
-            this.getUserInfo("/");
-          }
-        });
+                });
+            } else {
+              this.getUserInfo("/");
+            }
+          });
+      } else {
+        alert("Please get approval first");
+      }
     },
     validateAndSubmit() {
       this.loadOn();

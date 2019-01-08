@@ -38,6 +38,7 @@ $txt: #111;
     padding: 9px;
     a {
       width: 100%;
+      cursor: pointer;
       height: 100%;
       display: block;
       border-radius: 20px;

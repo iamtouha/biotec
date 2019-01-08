@@ -1,5 +1,5 @@
 <template>
-  <div class="container mt-4">
+  <div class="container mt-4 px-md-5">
     <table class="table">
       <thead class="thead-light" id="myTable">
         <tr>
