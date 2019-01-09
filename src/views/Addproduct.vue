@@ -125,7 +125,7 @@ export default {
     Loading
   },
   computed: {
-    ...mapGetters(["loading", "userInfo"])
+    ...mapGetters(["loading", "userInfo",'isApproved'])
   },
   data() {
     return {

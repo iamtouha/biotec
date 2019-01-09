@@ -1,14 +1,35 @@
 <template>
-  <div class="container">
-    <h1 class="text-center text-dark w-100 mb-3">New Transaction</h1>
+  <div class="container py-md-5">
+    <h4 class="text-center text-dark w-100 mb-2">New Transaction</h4>
     <form action>
-      <div class="form-row px-5">
-        <div class="form-group col-12">
+      <div class="form-row justify-content-center">
+        <div class="form-group col-md-6">
           <select class="custom-select" v-model="selectedClient">
             <option :value="null" selected>Select {{clientType}}</option>
             <option v-for="client in clients" :key="client" :value="client">{{client.name}}</option>
           </select>
-          <p class="w-100 text-danger text-center">{{warning2}}</p>
+          <p v-if="warning2" class="w-100 text-danger text-center">{{warning2}}</p>
+        </div>
+      </div>
+      <div class="form-row mb-2 justify-content-center">
+        <div class="input-group col-md-6">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon3">Invoice No.</span>
+          </div>
+          <input
+            type="number"
+            class="form-control"
+            v-model="invoice"
+            aria-describedby="basic-addon3"
+          >
+        </div>
+      </div>
+      <div class="form-row mb-2 justify-content-center">
+        <div class="input-group col-md-6">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon4">Date</span>
+          </div>
+          <input type="date" class="form-control" v-model="date" aria-describedby="basic-addon4">
         </div>
       </div>
       <div class="tblContainer">
@@ -116,8 +137,10 @@ export default {
       selectedProduct: [],
       pack_size: null,
       sizes: {},
+      date: new Date(),
       perUnitPrice: 0,
       netPrice: 0,
+      invoice: 0,
       unit: null,
       warning: null,
       warning2: null,
@@ -157,6 +180,7 @@ export default {
             refId: this.userInfo.id,
             clientName: this.selectedClient.name,
             netPrice: this.netPrice,
+            invoice: Number(this.invoice),
             time: firebase.firestore.FieldValue.serverTimestamp()
           })
           .then(() => {
@@ -220,7 +244,7 @@ export default {
 <style lang="scss" scoped>
 $primary: #01796f;
 div.container {
-  margin-top: 100px;
+  margin-top: 60px;
   div.addSize {
     height: 40px;
   }

@@ -56,6 +56,7 @@
 </template>
 <script>
 import { mapGetters, mapActions } from "vuex";
+import firebase from "firebase";
 import db from "@/components/firebaseInit.js";
 import modal from "@/components/Modal.vue";
 import Loader from "@/components/Loader.vue";
@@ -86,7 +87,15 @@ export default {
         .doc(this.Pid)
         .delete()
         .then(() => {
-          this.getUserInfo("/");
+          firebase
+            .storage()
+            .ref()
+            .child("products/" + this.Pid + ".jpg")
+            .delete()
+            .then(() => {
+              this.getUserInfo("/");
+            })
+            .catch(err => alert(err));
         })
         .catch(err => alert(err));
     }

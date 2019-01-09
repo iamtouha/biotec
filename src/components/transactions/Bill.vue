@@ -25,6 +25,7 @@
         <tr>
           <th scope="col">#</th>
           <th scope="col">{{clientType}}</th>
+          <th scope="col">I.No.</th>
           <th scope="col">Date</th>
           <th scope="col">tk</th>
         </tr>
@@ -38,7 +39,8 @@
           data-target="#exampleModal2"
         >
           <th scope="row">{{from+index+1}}</th>
-          <td @click="showList(element.id)" class="text-truncate">{{element.name}}</td>
+          <td class="text-truncate">{{element.name}}</td>
+          <th scope="row">{{element.invoice}}</th>
           <td class="text-truncate">{{element.date}}</td>
           <td>{{element.bill}}</td>
         </tr>
@@ -110,6 +112,7 @@ export default {
               this.transactions.push({
                 id: doc.id,
                 name: entry.clientName,
+                invoice: entry.invoice,
                 date: String(date) + "-" + month + "-" + String(year),
                 products: entry.products,
                 bill: entry.netPrice

@@ -1,6 +1,6 @@
 <template>
   <div class="contain">
-    <a href="https://facebook.com/touha99" class="credit">credits</a>
+    <a href="https://facebook.com/touha99" class="credit text-white">credits</a>
     <div class="intro text-center">
       <img src="@/assets/biotech-w.svg" alt="biotech ltd">
       <p class="w-100 text-white m-0">A biotech inventory management app</p>
@@ -8,33 +8,41 @@
     </div>
     <div class="wrapper">
       <form>
-        <div class="form-group">
-          <label for="exampleInputEmail1">Email address</label>
-          <input
-            type="email"
-            v-model="email"
-            class="form-control"
-            id="exampleInputEmail1"
-            aria-describedby="emailHelp"
-            placeholder="Enter email"
-          >
+        <div class="row justify-content-center px-md-5">
+          <div class="form-group col-md-6">
+            <label for="exampleInputEmail1">Email address</label>
+            <input
+              type="email"
+              v-model="email"
+              class="form-control"
+              id="exampleInputEmail1"
+              aria-describedby="emailHelp"
+              placeholder="Enter email"
+            >
+          </div>
         </div>
-        <div class="form-group">
-          <label for="exampleInputPassword1">Password</label>
-          <input
-            type="password"
-            v-model="password"
-            class="form-control"
-            id="exampleInputPassword1"
-            placeholder="Password"
-          >
+        <div class="row justify-content-center px-md-5">
+          <div class="form-group col-md-6">
+            <label for="exampleInputPassword1">Password</label>
+            <input
+              type="password"
+              v-model="password"
+              class="form-control"
+              id="exampleInputPassword1"
+              placeholder="Password"
+            >
+          </div>
         </div>
-        <button type="submit" @click="logIn" class="btn btn-info">Log In</button>
-        <router-link
-          to="/registration"
-          tag="button"
-          class="btn btn-outline-light float-right"
-        >Create Account</router-link>
+        <div class="row justify-content-center px-md-5">
+          <div class="col-md-6 justify-content-between d-flex">
+            <button type="submit" @click="logIn" class="btn btn-info">Log In</button>
+            <router-link
+              to="/registration"
+              tag="button"
+              class="btn btn-outline-light"
+            >Create Account</router-link>
+          </div>
+        </div>
       </form>
     </div>
   </div>
@@ -83,7 +91,6 @@ export default {
 <style lang="scss" scoped>
 div.contain {
   .credits {
-    display: block;
     position: fixed;
     top: 20px;
     right: 20px;

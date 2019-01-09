@@ -14,7 +14,7 @@ export default {
 <style lang="scss" scoped>
 .loader {
   z-index: 1001;
-  position: absolute;
+  position: fixed;
   top: 48%;
   left: 48%;
   width: 50px !important;
