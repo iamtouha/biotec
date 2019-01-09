@@ -5,6 +5,7 @@
         <tr>
           <th scope="col">#</th>
           <th scope="col">{{clientType}}</th>
+          <th scope="col">Rcpt. No.</th>
           <th scope="col">Date</th>
           <th scope="col">tk</th>
         </tr>
@@ -13,6 +14,7 @@
         <tr v-for="(element, index) in transactions.slice(from, show)" :key="transactions[index]">
           <th scope="row">{{from+index+1}}</th>
           <td class="text-truncate">{{element.name}}</td>
+          <td class="text-truncate">{{element.receipt}}</td>
           <td class="text-truncate">{{element.date}}</td>
           <td>{{element.bill}}</td>
         </tr>
@@ -82,7 +84,8 @@ export default {
               this.transactions.push({
                 name: entry.clientName,
                 date: String(date) + "-" + month + "-" + String(year),
-                bill: entry.amount
+                bill: entry.amount,
+                receipt: entry.receipt
               });
               this.loadOff();
             });

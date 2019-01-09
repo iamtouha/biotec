@@ -123,7 +123,6 @@ div.contain {
   height: 100vh;
   position: fixed;
   background: #01796f;
-  z-index: 999;
   text-align: left;
   input {
     box-sizing: border-box;

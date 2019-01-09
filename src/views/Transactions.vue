@@ -13,7 +13,7 @@
     <div v-else-if="isApproved" data-toggle="modal" data-target="#exampleModal" class="addtrans">
       <i class="fas fa-plus"></i>
     </div>
-    <Modal confirmation="Add" title="Add Payment" @confirm="pay()">
+    <Modal :confirmation="add" title="Add Payment" @confirm="pay()">
       <p class="w-100 text-center text-danger">{{warning2}}</p>
       <div class="input-group mb-3">
         <select v-model="payerClient" class="form-control">
@@ -28,6 +28,32 @@
         <input
           type="text"
           v-model="paidAmount"
+          maxlength="5"
+          class="form-control"
+          aria-label="Sizing example input"
+          aria-describedby="inputGroup-sizing-default"
+        >
+      </div>
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="inputGroup-sizing-default">Date</span>
+        </div>
+        <input
+          type="date"
+          v-model="date"
+          class="form-control"
+          aria-label="Sizing example input"
+          aria-describedby="inputGroup-sizing-default"
+        >
+      </div>
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="inputGroup-sizing-default">Receipt No.</span>
+        </div>
+        <input
+          type="number"
+          v-model="receipt"
+          maxlength="5"
           class="form-control"
           aria-label="Sizing example input"
           aria-describedby="inputGroup-sizing-default"
@@ -54,7 +80,9 @@ export default {
       paidAmount: 0,
       clients: [],
       warning2: null,
-      ckey: 0
+      ckey: 0,
+      date: null,
+      receipt: null
     };
   },
   methods: {
@@ -66,8 +94,9 @@ export default {
             clientId: this.payerClient.id,
             clientName: this.payerClient.name,
             refId: this.userInfo.id,
+            receipt: this.receipt,
             amount: Number(this.paidAmount),
-            time: firebase.firestore.FieldValue.serverTimestamp()
+            time: new Date(this.date)
           })
           .then(() => {
             this.ckey++;
@@ -81,6 +110,11 @@ export default {
     ...mapGetters(["userInfo", "clientType", "isApproved"]),
     routeName() {
       return this.$route.name;
+    },
+    add() {
+      return this.payerClient && this.paidAmount && this.receipt && this.date
+        ? "Add"
+        : null;
     }
   },
   created() {

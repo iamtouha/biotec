@@ -41,7 +41,6 @@
       </div>
     </div>
     <Loader v-if="loading"/>
-    <h1 @click="img()">Has</h1>
     <router-link
       :to="'/product/'+this.$route.params.id+'/edit'"
       tag="button"
@@ -84,9 +83,6 @@ export default {
   },
   methods: {
     ...mapActions(["loadOn", "loadOff", "getUserInfo"]),
-    img() {
-      console.log(this.hasImage);
-    },
     dltProduct() {
       db.collection("products")
         .doc(this.Pid)

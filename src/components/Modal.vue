@@ -13,6 +13,7 @@
         </div>
         <div class="modal-footer">
           <button
+            v-if="confirmation"
             type="button"
             @click="$emit('confirm')"
             data-dismiss="modal"

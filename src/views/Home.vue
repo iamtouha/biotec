@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <coverContainer/>
-    <h1 class="display-4 text-center w-100 mt-3">Our Products</h1>
+    <h1 class="display-4 text-center w-100 mt-3">Products</h1>
     <div class="container">
       <productApp/>
     </div>

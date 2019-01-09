@@ -16,6 +16,7 @@
             class="form-control"
             id="exampleInputPassword1"
             placeholder="Password"
+            maxlength="22"
           >
         </div>
         <div class="form-group">
@@ -26,6 +27,7 @@
             v-model="newPass"
             id="exampleInputPassword2"
             placeholder="New Password"
+            maxlength="22"
           >
         </div>
         <div class="form-group">
@@ -44,7 +46,7 @@
         <div class="input-group-prepend">
           <span class="input-group-text">+880</span>
         </div>
-        <input type="text" v-model="newPhone" class="form-control">
+        <input type="text" maxlength="22" v-model="newPhone" class="form-control">
       </div>
       <p v-if="warning3!==true" class="text-danger">{{warning3}}</p>
     </change-phone-modal>
@@ -58,6 +60,7 @@
         <label for="exampleInputPassword3">Enter Password to continue</label>
         <input
           type="password"
+          maxlength="22"
           class="form-control"
           v-model="erasePass"
           id="exampleInputPassword3"
@@ -75,6 +78,7 @@
           <div class="col pl-0 pr-1">
             <input
               type="text"
+              maxlength="22"
               v-model="clientName"
               class="form-control mx-0"
               :placeholder="clientType+' Name'"
@@ -84,6 +88,7 @@
           <div class="col pr-0 pl-1">
             <input
               type="text"
+              maxlength="22"
               v-model="clientArea"
               class="form-control mx-0"
               placeholder="Area Name"
@@ -137,7 +142,10 @@
         >
           <i class="fas fa-mobile-alt mr-2"></i>Change mobile no.
         </a>
-        
+        <router-link tag="a" to="/addphoto" class="list-group-item list-group-item-action">
+          <i class="fas fa-file-image mr-2"></i>Change Photo
+        </router-link>
+
         <a
           @click.prevent
           data-toggle="modal"
@@ -296,7 +304,6 @@ export default {
     },
     eraseAll() {
       this.validateUser(() => {
-        this.eraseCollection(this.clientType, "ref");
         this.eraseCollection("transactions", "refId");
         this.eraseCollection("payments", "refId");
       }, this.erasePass);

@@ -19,6 +19,7 @@
           <input
             type="number"
             class="form-control"
+            placeholder="Enter Invoice No."
             v-model="invoice"
             aria-describedby="basic-addon3"
           >
@@ -98,7 +99,7 @@
       </h2>
 
       <input
-        v-if="netPrice && selectedClient"
+        v-if="netPrice && selectedClient && date && invoice"
         type="submit"
         @click.prevent="submitProduct"
         name="submit"
@@ -137,10 +138,10 @@ export default {
       selectedProduct: [],
       pack_size: null,
       sizes: {},
-      date: new Date(),
-      perUnitPrice: 0,
+      date: "",
+      perUnitPrice: null,
       netPrice: 0,
-      invoice: 0,
+      invoice: null,
       unit: null,
       warning: null,
       warning2: null,
@@ -152,7 +153,6 @@ export default {
 
     addProduct(product, size, unit, perUnitPrice) {
       if (size && unit && perUnitPrice) {
-        console.log(product);
         this.selectedProduct.push({
           name: product.title,
           id: product.id,
@@ -171,6 +171,7 @@ export default {
     },
     submitProduct() {
       if (this.isApproved) {
+        const timestamp = new Date(this.date);
         this.loadOn();
         db.collection("transactions")
           .doc()
@@ -181,7 +182,7 @@ export default {
             clientName: this.selectedClient.name,
             netPrice: this.netPrice,
             invoice: Number(this.invoice),
-            time: firebase.firestore.FieldValue.serverTimestamp()
+            time: timestamp
           })
           .then(() => {
             this.loadOff();
