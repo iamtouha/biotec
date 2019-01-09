@@ -41,6 +41,7 @@
       </div>
     </div>
     <Loader v-if="loading"/>
+    <h1 @click="img()">Has</h1>
     <router-link
       :to="'/product/'+this.$route.params.id+'/edit'"
       tag="button"
@@ -71,7 +72,8 @@ export default {
       name: "",
       packs: {},
       type: "",
-      image: null
+      image: null,
+      hasImage: null
     };
   },
   computed: {
@@ -82,20 +84,27 @@ export default {
   },
   methods: {
     ...mapActions(["loadOn", "loadOff", "getUserInfo"]),
+    img() {
+      console.log(this.hasImage);
+    },
     dltProduct() {
       db.collection("products")
         .doc(this.Pid)
         .delete()
         .then(() => {
-          firebase
-            .storage()
-            .ref()
-            .child("products/" + this.Pid + ".jpg")
-            .delete()
-            .then(() => {
-              this.getUserInfo("/");
-            })
-            .catch(err => alert(err));
+          if (this.hasImage === true) {
+            firebase
+              .storage()
+              .ref()
+              .child("products/" + this.Pid + ".jpg")
+              .delete()
+              .then(() => {
+                this.getUserInfo("/");
+              })
+              .catch(err => alert(err));
+          } else {
+            this.getUserInfo("/");
+          }
         })
         .catch(err => alert(err));
     }
@@ -113,6 +122,7 @@ export default {
         this.image = doc.data().imageUrl
           ? doc.data().imageUrl
           : require("./../assets/img/" + doc.data().type + ".svg");
+        this.hasImage = doc.data().imageUrl ? true : false;
         this.loadOff();
       })
       .catch(err => {
