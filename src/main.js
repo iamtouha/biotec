@@ -7,7 +7,7 @@ import './components/firebaseInit'
 
 Vue.config.productionTip = false
 
-let app;
+let app
 firebase.auth().onAuthStateChanged(user => {
   if (!app) {
     new Vue({
@@ -17,5 +17,3 @@ firebase.auth().onAuthStateChanged(user => {
     }).$mount('#app')
   }
 })
-
-

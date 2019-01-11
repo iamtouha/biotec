@@ -2,7 +2,7 @@
   <div class="home">
     <coverContainer/>
     <h1 class="display-4 text-center w-100 mt-3">Products</h1>
-    <div class="container">
+    <div class="container mb-5">
       <productApp/>
     </div>
     <router-link to="/addproduct" v-if="isApproved" tag="div" class="addproduct">

@@ -67,7 +67,6 @@
           option-label="title"
           :options="products"
           placeholder="pick a product"
-          :max-results="5"
           a-post-has-an-id="good for search and display"
           the-post-has-a-title="make sure to show these"
         ></vue-single-select>
@@ -216,11 +215,11 @@ export default {
   created() {
     db.collection(this.clientType)
       .where("ref", "==", this.userInfo.id)
-      .get()
-      .then(querySnap => {
+      .orderBy('name', 'asc')
+      .get().then(querySnap => {
         if (!querySnap.size) {
           this.waring2 == "please add a client first";
-        } else {
+        } else {          
           querySnap.forEach(doc => {
             this.clients.push({
               name: doc.data().name,

@@ -382,7 +382,6 @@ export default {
                   ref: this.userInfo.id
                 })
                 .then(() => {
-                  console.log("done");
                   this.warning = "";
                   this.clientName = null;
                   this.clientArea = null;

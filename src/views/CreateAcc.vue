@@ -165,9 +165,6 @@ export default {
     mail() {
       this.validMail(this.mail);
       this.getEmail(this.mail);
-    },
-    userInfo() {
-      console.log(this.userInfo);
     }
   },
   created() {

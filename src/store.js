@@ -20,7 +20,7 @@ export default new Vuex.Store({
     approved: false,
     client: null,
     loader: false,
-    products: [],
+    products: []
   },
   getters: {
     isApproved: state => {
@@ -30,16 +30,16 @@ export default new Vuex.Store({
       return state.loader
     },
     productsInfo: state => {
-      return state.products;
+      return state.products
     },
     currentPage: state => {
-      return state.currentpage;
+      return state.currentpage
     },
     userInfo: state => {
-      return state.user;
+      return state.user
     },
     clientType: state => {
-      return state.client;
+      return state.client
     }
   },
   mutations: {
@@ -58,29 +58,29 @@ export default new Vuex.Store({
       db.collection('user').where('email', '==', state.user.email).get().then((querySnapShot) => {
         querySnapShot.forEach(doc => {
           const user = doc.data()
-          state.user.id = doc.id;
-          state.user.name = user.name;
-          state.user.post = user.post;
-          state.approved = user.approved;
-          state.user.referance = user.refId;
-          state.user.imgUrl = user.imageUrl;
-          if (user.post == "Area Manager") {
-            state.client = "Dealer";
-          } else if (user.post == "Marketing Officer") {
-            state.client = "Retailer";
+          state.user.id = doc.id
+          state.user.name = user.name
+          state.user.post = user.post
+          state.approved = user.approved
+          state.user.referance = user.refId
+          state.user.imgUrl = user.imageUrl
+          if (user.post === 'Area Manager') {
+            state.client = 'Dealer'
+          } else if (user.post === 'Marketing Officer') {
+            state.client = 'Retailer'
           } else {
-            state.client = "Undefined! something went wrong";
+            state.client = 'Undefined! something went wrong'
           }
-        });
-        db.collection("products")
-          .where("ULed_by", "==", state.user.id).orderBy('time', 'desc')
+        })
+        db.collection('products')
+          .where('ULed_by', '==', state.user.id).orderBy('name', 'asc')
           .get()
           .then(querySnapshot => {
             state.products = []
             if (querySnapShot.size) {
               querySnapshot.forEach(doc => {
                 const product = doc.data()
-                const imgDefault = product.imageUrl ? false : true
+                const imgDefault = !product.imageUrl
                 const img = product.imageUrl ? product.imageUrl : require('./assets/img/' + product.type + '.svg')
                 state.products.push({
                   id: doc.id,
@@ -89,19 +89,18 @@ export default new Vuex.Store({
                   pack: product.pack,
                   imgUrl: img,
                   imgDefault: imgDefault
-                });
-
-              });
+                })
+              })
             }
             state.loader = false
             if (payload) {
-              router.push(payload);
+              router.push(payload)
             }
           })
           .catch(err => {
             alert(err)
             state.loader = false
-          });
+          })
       })
     }
   },
@@ -110,8 +109,7 @@ export default new Vuex.Store({
       context.commit('setEmail', payload)
     },
     getUserInfo: (context, payload) => {
-      context.commit('setUserInfo', payload);
-
+      context.commit('setUserInfo', payload)
     },
     loadOn: context => {
       context.commit('setLoaderOn')

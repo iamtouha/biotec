@@ -40,8 +40,8 @@
 </template>
 
 <script>
-import db from "@/components/firebaseInit.js";
-import Loader from "@/components/Loader.vue";
+import db from "@/components/firebaseInit.js"
+import Loader from "@/components/Loader.vue"
 import { mapGetters, mapActions } from "vuex";
 export default {
   components: { Loader },
@@ -60,7 +60,7 @@ export default {
   created() {
     this.loadOn();
     db.collection(this.clientType)
-      .where("ref", "==", this.userInfo.id)
+      .where("ref", "==", this.userInfo.id).orderBy('name','asc')
       .get()
       .then(querySnap => {
         if (querySnap.size) {
@@ -149,6 +149,7 @@ div.shadow-wrapper {
   padding: 10px 30px;
   div {
     box-sizing: border-box;
+    background: #fff;
     width: 100%;
     transform: translateX(4%);
     height: 100%;

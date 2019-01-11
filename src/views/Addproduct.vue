@@ -151,7 +151,6 @@ export default {
         if (!this.product.pack[size]) {
           this.product.pack[size] = Number(price);
           this.price = this.size = this.warning = null;
-          console.log(this.product.pack);
           this.ckey++;
           this.packages++;
         } else {

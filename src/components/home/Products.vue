@@ -1,7 +1,11 @@
 <template>
-  <div class="row">
-    <div v-for="(product,key) in productsInfo" class="col-md-3 col-4" :key="productsInfo[key]">
-      <router-link :to="'product/'+ product.id" tag="div" class="wrapper">
+  <div class="row" id="productsContainer">
+    <div
+      v-for="(product,index) in productsInfo.slice(0, this.showProduct)"
+      class="col-md-3 col-4"
+      :key="index"
+    >
+      <router-link :to="'product/'+ product.id" :id="'product'+index" tag="div" class="wrapper">
         <div
           ref="productThumb"
           :style="'background-image:' + 'url('+product.imgUrl+');'"
@@ -16,8 +20,32 @@
 <script>
 import { mapGetters } from "vuex";
 export default {
+  data() {
+    return {
+      showProduct: 3
+    }
+  },
   computed: {
-    ...mapGetters(["productsInfo"])
+    ...mapGetters(["productsInfo"]),
+  },
+  methods: {
+    getPosition(){
+      let height = window.scrollY
+      let pageHeight = document.documentElement.scrollHeight
+      let viewHeight = document.documentElement.clientHeight
+      let viewWidth = document.documentElement.clientWidth
+      let bottomOfPage = (height+viewHeight) >= pageHeight
+      if(bottomOfPage && this.productsInfo.length>this.showProduct)  this.showProduct += 3
+     },
+    setLoad(){
+      
+    }    
+  },
+  created () {
+    window.addEventListener('scroll', this.getPosition);
+  },
+  destroyed () {
+    window.removeEventListener('scroll', this.getPosition);
   }
 };
 </script>

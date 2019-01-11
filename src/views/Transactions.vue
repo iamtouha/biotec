@@ -118,7 +118,6 @@ export default {
     }
   },
   created() {
-    console.log(this.isApproved);
     db.collection(this.clientType)
       .where("ref", "==", this.userInfo.id)
       .get()
