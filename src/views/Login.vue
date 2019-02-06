@@ -4,7 +4,7 @@
     <div class="intro text-center">
       <img src="@/assets/biotech-w.svg" alt="biotech ltd">
       <p class="w-100 text-white m-0">A biotech inventory management app</p>
-      <small class="w-100 text-white m-0">beta version: 0.5.5</small>
+      <small class="w-100 text-white m-0">beta version: 0.6.0</small>
     </div>
     <div class="wrapper">
       <form>

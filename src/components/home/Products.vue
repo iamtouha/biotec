@@ -35,13 +35,14 @@ export default {
       let viewHeight = document.documentElement.clientHeight
       let viewWidth = document.documentElement.clientWidth
       let bottomOfPage = (height+viewHeight) >= pageHeight
-      if(bottomOfPage && this.productsInfo.length>this.showProduct)  this.showProduct += 3
-     },
-    setLoad(){
+      console.log(height+viewHeight)
+      console.log(pageHeight)
       
-    }    
+      if(bottomOfPage && this.productsInfo.length>this.showProduct)  this.showProduct += 3
+     }
   },
   created () {
+    this.getPosition()
     window.addEventListener('scroll', this.getPosition);
   },
   destroyed () {

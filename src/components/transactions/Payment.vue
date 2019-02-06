@@ -8,6 +8,7 @@
           <th scope="col">Rcpt. No.</th>
           <th scope="col">Date</th>
           <th scope="col">tk</th>
+          <th scope="col">delete</th>
         </tr>
       </thead>
       <tbody>
@@ -17,6 +18,12 @@
           <td class="text-truncate">{{element.receipt}}</td>
           <td class="text-truncate">{{element.date}}</td>
           <td>{{element.bill}}</td>
+          <td><span
+                  class="btn btn-outline-danger btn-sm"
+                  style="font-size:16px; height: 25px; line-height: 16px"
+                  @click="deleteClient(element.id, index)"
+                >&times;</span>
+                </td>
         </tr>
       </tbody>
     </table>
@@ -54,6 +61,7 @@ export default {
     ...mapActions(["loadOn", "loadOff", "userInfo"]),
     loadClients() {
       this.loadOn();
+      this.transactions = []
       db.collection("payments")
         .where("refId", "==", this.userInfo.id)
         .orderBy("time", "desc")
@@ -82,6 +90,7 @@ export default {
               let year = timeToDate.getFullYear();
 
               this.transactions.push({
+                id: doc.id,
                 name: entry.clientName,
                 date: String(date) + "-" + month + "-" + String(year),
                 bill: entry.amount,
@@ -101,6 +110,11 @@ export default {
     paginate(n) {
       this.from = 5 * n - 5;
       this.show = 5 * n;
+    },
+    deleteClient(id, index){
+      db.collection('payments').doc(id).delete().then(()=>{
+        this.loadClients();
+      })
     }
   },
   created() {
@@ -120,3 +134,15 @@ export default {
 };
 </script>
 
+<style lang="scss" scoped>
+button.btn-sm {
+    text-align: left;
+    font-size: 16px;
+    i {
+      font-size: 20px;
+      margin: 5px;
+      margin-right: 10px;
+      transform: translateY(3px);
+    }
+  }
+</style>

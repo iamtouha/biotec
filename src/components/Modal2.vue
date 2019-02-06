@@ -19,13 +19,12 @@
             data-dismiss="modal"
             class="btn btn-primary"
           >{{confirmation}}</button>
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal"  @click="$emit('onCancel')">{{cancel}}</button>
         </div>
       </div>
     </div>
   </div>
 </template>
-
 <script>
 export default {
   props: ["title", "confirmation", "cancel", "modalId"]

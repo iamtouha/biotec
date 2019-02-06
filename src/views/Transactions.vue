@@ -64,11 +64,11 @@
 </template>
 
 <script>
-import NavigatorApp from "@/components/transactions/Navigator";
-import Modal from "@/components/Modal.vue";
-import db from "@/components/firebaseInit.js";
-import firebase from "firebase";
-import { mapGetters } from "vuex";
+import NavigatorApp from "@/components/transactions/Navigator"
+import Modal from "@/components/Modal.vue"
+import db from "@/components/firebaseInit.js"
+import firebase from "firebase"
+import { mapGetters } from "vuex"
 export default {
   components: {
     NavigatorApp,
@@ -83,7 +83,7 @@ export default {
       ckey: 0,
       date: null,
       receipt: null
-    };
+    }
   },
   methods: {
     pay() {
@@ -99,22 +99,22 @@ export default {
             time: new Date(this.date)
           })
           .then(() => {
-            this.ckey++;
-          });
+            this.ckey++
+          })
       } else {
-        this.waring2 = "select dealer and enter amount";
+        this.waring2 = "select dealer and enter amount"
       }
     }
   },
   computed: {
     ...mapGetters(["userInfo", "clientType", "isApproved"]),
     routeName() {
-      return this.$route.name;
+      return this.$route.name
     },
     add() {
       return this.payerClient && this.paidAmount && this.receipt && this.date
         ? "Add"
-        : null;
+        : null
     }
   },
   created() {
@@ -123,19 +123,19 @@ export default {
       .get()
       .then(querySnap => {
         if (!querySnap.size) {
-          this.waring2 == "please add a client first";
+          this.waring2 == "please add a client first"
         } else {
           querySnap.forEach(doc => {
             this.clients.push({
               name: doc.data().name,
               id: doc.id
-            });
-          });
+            })
+          })
         }
       })
-      .catch(err => alert(err));
+      .catch(err => alert(err))
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>

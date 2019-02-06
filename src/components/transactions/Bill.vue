@@ -1,6 +1,6 @@
 <template>
   <div class="container mt-4 px-md-5">
-    <Modal modalId="exampleModal2" :confirmation="null" title="Product List">
+    <Modal cancel = "Delete" @onCancel="deleteId(transId)" modalId="exampleModal2" :confirmation="null" title="Product List">
       <table class="table">
         <thead class="thead-light" id="myTable">
           <tr>
@@ -20,7 +20,7 @@
         </tbody>
       </table>
     </Modal>
-    <table class="table table-1">
+    <table class="table table-1" :key="key">
       <thead class="thead-light" id="myTable">
         <tr>
           <th scope="col">#</th>
@@ -67,10 +67,12 @@ export default {
   components: { Loading, Modal },
   data() {
     return {
+      transId: null,
       transactions: [],
       items: 0,
       from: 0,
       show: 5,
+      key: 0,
       pages: 0,
       showMemo: null
     };
@@ -80,6 +82,12 @@ export default {
   },
   methods: {
     ...mapActions(["loadOn", "loadOff"]),
+    deleteId(index) {
+      db.collection('transactions').doc(index).delete().then(()=>{
+        this.loadClients()
+        this.key++
+      }).catch(err => alert(err))
+    },
     loadClients() {
       this.loadOn();
       db.collection("transactions")
@@ -87,6 +95,7 @@ export default {
         .orderBy("time", "desc")
         .get()
         .then(querySnap => {
+          this.transactions = []
           if (querySnap.size) {
             const monthNames = [
               "Jan",
@@ -135,7 +144,8 @@ export default {
     showList(id) {
       for (let i in this.transactions) {
         if (this.transactions[i].id == id) {
-          this.showMemo = this.transactions[i].products;
+          this.showMemo = this.transactions[i].products
+          this.transId = this.transactions[i].id
           break;
         }
       }

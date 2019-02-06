@@ -3,6 +3,7 @@
     <div v-if="alert" class="alert alert-success" role="alert">{{alert}}</div>
     <change-pass-modal
       @confirm="changePassword()"
+      cancel = "Cancel"
       title="Change Password"
       :confirmation="oldPass&&newPass&&newPass2?'change':null"
       modalId="changePass"
@@ -38,6 +39,7 @@
     </change-pass-modal>
     <change-phone-modal
       title="New Phone No."
+      cancel = "Cancel"
       @confirm="changePhone()"
       :confirmation="warning3===true?'Confirm':null"
       modalId="changePhone"
@@ -52,6 +54,7 @@
     </change-phone-modal>
     <erase-modal
       title="Erase Everything?"
+      cancel = "Cancel"
       :confirmation="erasePass.length>5?'ERASE':null "
       modalId="erase"
       @confirm="eraseAll()"
